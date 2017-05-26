@@ -26,8 +26,19 @@ public abstract class RingElement implements Set {
 		
 		return (RingElement)this.ring.add(this, el);
 	}
+	
 	public RingElement multiply(RingElement el) {
 		
 		return (RingElement)this.ring.multiply(this, el);
+	}
+	
+	public RingElement getNegative() {
+		
+		return (RingElement)this.ring.getNegative(this);
+	}
+	
+	public RingElement getInverse() {
+		
+		return (RingElement)this.ring.getInverse(this);
 	}
 }

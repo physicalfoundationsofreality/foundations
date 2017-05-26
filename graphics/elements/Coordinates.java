@@ -2,41 +2,27 @@ package com.gruber.pfr.graphics.elements;
 
 public class Coordinates {
 
-	int minX;
-	int maxX;
-	int minY;
-	int maxY;
+	int[] min;
+	int[] max;
 	
-	public Coordinates(int minX, int maxX, int minY, int maxY) {
+	public Coordinates(int min[], int max[]) {
 		
-		this.minX = minX;
-		this.maxX = maxX;
-		this.minY = minY;
-		this.maxY = maxY;
+		this.min = min;
+		this.max = max;
 	}
-	public int getMinX() {
-		return minX;
+	public int getMin(int i) {
+		return min[i];
 	}
-	public void setMinX(int minX) {
-		this.minX = minX;
+	public void setMin(int min, int i) {
+		this.min[i] = min;
 	}
-	public int getMaxX() {
-		return maxX;
+	public int getMax(int i) {
+		return max[i];
 	}
-	public void setMaxX(int maxX) {
-		this.maxX = maxX;
+	public void setMax(int max, int i) {
+		this.max[i] = max;
+	}	
+	public int getDimension() {
+		return min.length;
 	}
-	public int getMinY() {
-		return minY;
-	}
-	public void setMinY(int minY) {
-		this.minY = minY;
-	}
-	public int getMaxY() {
-		return maxY;
-	}
-	public void setMaxY(int maxY) {
-		this.maxY = maxY;
-	}
-	
 }

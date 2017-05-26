@@ -34,4 +34,24 @@ public class RealNumber extends RingElement {
 		
 		return false;
 	}
+	
+	public RealNumber add(RealNumber el) {
+		
+		return (RealNumber)this.add((RingElement)el);
+	}
+	
+	public RealNumber multiply(RealNumber el) {
+		
+		return (RealNumber)this.multiply((RingElement)el);
+	}
+	
+	public RealNumber getNegative() {
+		
+		return (RealNumber)super.getNegative();
+	}
+	
+	public RealNumber getInverse() {
+		
+		return (RealNumber)super.getInverse();
+	}
 }

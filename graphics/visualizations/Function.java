@@ -3,19 +3,19 @@ package com.gruber.pfr.graphics.visualizations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gruber.pfr.graphics.Visualization;
-import com.gruber.pfr.graphics.elements.Coordinates;
+import com.gruber.pfr.graphics.Visualization2D;
+import com.gruber.pfr.graphics.elements.Coordinates2D;
 import com.gruber.pfr.graphics.elements.Point;
 import com.gruber.pfr.graphics.elements.Vector;
 
-public abstract class Function implements Visualization {
+public abstract class Function implements Visualization2D {
 
-	Coordinates coord = null;
+	Coordinates2D coord = null;
 	int gran;
 
 	protected Function(int minX, int maxX, int granularity) {
 		
-		this.coord = new Coordinates(minX, maxX, 0, 0);
+		this.coord = new Coordinates2D(minX, maxX, 0, 0);
 		this.gran = granularity;
 	}
 
@@ -81,7 +81,7 @@ public abstract class Function implements Visualization {
 		}
 	}
 
-	public Coordinates getCoordinates() {
+	public Coordinates2D getCoordinates() {
 		return coord;
 	}
 

@@ -4,8 +4,8 @@ import java.util.Random;
 
 import com.gruber.pfr.space.base.AdditiveSpace;
 import com.gruber.pfr.space.base.Set;
-import com.gruber.pfr.space.numbers.complex.ComplexNumber;
 import com.gruber.pfr.space.rings.Field;
+import com.gruber.pfr.space.rings.RingElement;
 
 public class RealNumbers extends Field {
 	
@@ -65,7 +65,15 @@ public class RealNumbers extends Field {
 
 		return new RealNumber(1);
 	}
+	
+	public RealNumber add(RealNumber op1, RealNumber op2) {
+		return (RealNumber)this.add((RingElement)op1, (RingElement)op2);
+	}
 
+	public RealNumber multiply(RealNumber op1, RealNumber op2) {
+		return (RealNumber)this.multiply((RingElement)op1, (RingElement)op2);
+	}
+	
 	public Set getInverse(Set element) {
 
 		try {
@@ -75,5 +83,15 @@ public class RealNumbers extends Field {
 		} catch(Exception e) {
 			return null;
 		}
+	}
+	
+	public RealNumber getNegative(RealNumber element) {
+		
+		return (RealNumber)this.getNegative((Set)element);
+	}
+	
+	public RealNumber getInverse(RealNumber element) {
+		
+		return (RealNumber)this.getInverse((Set)element);
 	}
 }

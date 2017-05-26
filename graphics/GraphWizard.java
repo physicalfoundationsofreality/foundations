@@ -17,23 +17,23 @@ import javax.swing.BoxLayout;
 import javax.swing.JApplet;
 import javax.swing.JPanel;
 
-import com.gruber.pfr.graphics.elements.Coordinates;
+import com.gruber.pfr.graphics.elements.Coordinates2D;
 import com.gruber.pfr.graphics.elements.Vector;
 
 public class GraphWizard extends JApplet {
 
 	public static enum FunctionType {
 
-		SINGLE_POINT, LINE_STRAIGHT// , LINE_QUADRATIC, LINE_CUBIC
+		SINGLE_POINT, SINGLE_POINT_TANGENT, LINE_STRAIGHT, LINE_STRAIGHT_TANGENT;// , LINE_QUADRATIC, LINE_CUBIC
 	}
 
 	class GraphicsSettings {
 
-		Visualization vis;
+		Visualization2D vis;
 		Dimension dim;
 		FunctionType type;
 
-		public void setVis(Visualization vis) {
+		public void setVis(Visualization2D vis) {
 			this.vis = vis;
 		}
 
@@ -86,7 +86,7 @@ public class GraphWizard extends JApplet {
 
 					GeneralPath path = new GeneralPath();
 
-					Coordinates coord = this.settings.vis.getCoordinates();
+					Coordinates2D coord = this.settings.vis.getCoordinates();
 
 					// transform the coordinates
 					int offX = coord.getMinX();
@@ -125,7 +125,9 @@ public class GraphWizard extends JApplet {
 					g2.draw(new Ellipse2D.Float(posX - 1, posY - 1, 2, 2));
 
 					g2.setColor(Color.BLUE);
-					if (vec.getDirection() != null) {
+					if (vec.getDirection() != null
+							&& ( this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT)
+									|| this.settings.type.equals(FunctionType.LINE_STRAIGHT_TANGENT))) {
 						float vecX = posX + vec.getDirection().getCoordinates()[0] * expX;
 						float vecY = posY - vec.getDirection().getCoordinates()[1] * expY;
 						g2.draw(new Line2D.Float(posX, posY, vecX, vecY));
@@ -137,7 +139,7 @@ public class GraphWizard extends JApplet {
 						posX = (vec.getOrigin().getCoordinates()[0] - offX) * expX;
 						posY = (offY - vec.getOrigin().getCoordinates()[1]) * expY;
 
-						if (this.settings.type.equals(FunctionType.SINGLE_POINT))
+						if (this.settings.type.equals(FunctionType.SINGLE_POINT) || this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT))
 							path.moveTo(posX, posY);
 
 						g2.setColor(Color.BLACK);
@@ -145,7 +147,9 @@ public class GraphWizard extends JApplet {
 //						g2.drawString(new Float(vec.getOrigin().getCoordinates()[0]).toString() + '-' + new Float(vec.getOrigin().getCoordinates()[1]).toString(), posX, posY);
 						path.lineTo(posX, posY);
 
-						if (vec.getDirection() != null) {
+						if (vec.getDirection() != null
+								&& ( this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT)
+										|| this.settings.type.equals(FunctionType.LINE_STRAIGHT_TANGENT) )) {
 							float vecX = posX + vec.getDirection().getCoordinates()[0] * expX;
 							float vecY = posY - vec.getDirection().getCoordinates()[1] * expY;
 							g2.setColor(Color.BLUE);
@@ -163,7 +167,7 @@ public class GraphWizard extends JApplet {
 
 	GraphicsSettings settings;
 
-	public GraphWizard(Visualization vis, Dimension dim, FunctionType type) {
+	public GraphWizard(Visualization2D vis, Dimension dim, FunctionType type) {
 		super();
 		this.settings = new GraphicsSettings();
 		this.settings.setVis(vis);
