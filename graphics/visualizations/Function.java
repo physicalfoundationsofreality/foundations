@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.gruber.pfr.graphics.Visualization2D;
 import com.gruber.pfr.graphics.elements.Coordinates2D;
-import com.gruber.pfr.graphics.elements.Point;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.SimplePoint;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public abstract class Function implements Visualization2D {
 
@@ -21,14 +21,14 @@ public abstract class Function implements Visualization2D {
 
 	public abstract float getFunctionValue(float x);
 
-	public List<List<Vector>> getCurves() {
+	public List<List<SimpleVector>> getCurves() {
 
 		if (gran == 0)
 			return null;
 		else {
 
-			ArrayList<List<Vector>> paths = new ArrayList<List<Vector>>(1);
-			ArrayList<Vector> path = new ArrayList<Vector>();
+			ArrayList<List<SimpleVector>> paths = new ArrayList<List<SimpleVector>>(1);
+			ArrayList<SimpleVector> path = new ArrayList<SimpleVector>();
 
 			float inc = 1 / new Float(gran).floatValue();
 			
@@ -46,7 +46,7 @@ public abstract class Function implements Visualization2D {
 				float[] point = new float[2];
 				point[0] = x;
 				point[1] = getFunctionValue(x);
-				Vector vec = new Vector(new Point(point));
+				SimpleVector vec = new SimpleVector(new SimplePoint(point));
 
 				if (point[1] < coord.getMinY())
 					coord.setMinY(new Double(Math.floor(point[1])).intValue());
@@ -70,7 +70,7 @@ public abstract class Function implements Visualization2D {
 				if (point[1] - dir[1] > coord.getMaxY())
 					coord.setMaxY(new Double(Math.ceil(point[1] - dir[1])).intValue());
 				
-				vec.setDirection(new Point(dir));
+				vec.setDirection(new SimplePoint(dir));
 				oldpoint = point;
 				
 				path.add(vec);

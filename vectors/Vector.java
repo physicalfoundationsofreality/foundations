@@ -3,9 +3,19 @@ package com.gruber.pfr.space.vectors;
 import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.rings.RingElement;
 
-public abstract class Vector implements Set {
+public abstract class Vector implements Set, Cloneable {
 	
 	Module space;
+	
+	public Vector clone() {
+		
+		try {
+			return (Vector)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	public Vector(Module space) {
 		this.space = space;
@@ -30,5 +40,9 @@ public abstract class Vector implements Set {
 
 	public Module getSpace() {
 		return space;
+	}
+
+	public void setSpace(Module space) {
+		this.space = space;
 	}
 }

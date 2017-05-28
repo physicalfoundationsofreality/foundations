@@ -5,7 +5,7 @@ import java.util.List;
 import com.gruber.pfr.graphics.Visualization2D;
 import com.gruber.pfr.graphics.elements.Coordinates;
 import com.gruber.pfr.graphics.elements.Coordinates2D;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public class Curves2D implements Visualization2D {
 
@@ -14,7 +14,7 @@ public class Curves2D implements Visualization2D {
 		this.curves = curves;
 	}
 
-	public List<List<Vector>> getCurves() {
+	public List<List<SimpleVector>> getCurves() {
 		
 		return this.curves.getCurves();
 	}

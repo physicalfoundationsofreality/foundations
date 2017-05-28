@@ -5,17 +5,17 @@ import java.util.List;
 
 import com.gruber.pfr.graphics.Visualization;
 import com.gruber.pfr.graphics.elements.Coordinates;
-import com.gruber.pfr.graphics.elements.Point;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.SimplePoint;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public abstract class Curves implements Visualization {
 
 	Coordinates coord = null;
 	int gran;
 	int length;
-	Vector[] startingPoints;
+	SimpleVector[] startingPoints;
 
-	protected Curves(Vector[] startingPoints, int length, int granularity, int dimension) {
+	protected Curves(SimpleVector[] startingPoints, int length, int granularity, int dimension) {
 
 		this.coord = new Coordinates(new int[dimension], new int[dimension]);
 		this.gran = granularity;
@@ -23,15 +23,25 @@ public abstract class Curves implements Visualization {
 		this.length = length;
 	}
 
-	public abstract Vector getNextCurveValue(Vector current);
+	public SimpleVector[] getStartingPoints() {
+		return startingPoints;
+	}
 
-	public List<List<Vector>> getCurves() {
+
+	public void setStartingPoints(SimpleVector[] startingPoints) {
+		this.startingPoints = startingPoints;
+	}
+
+
+	public abstract SimpleVector getNextCurveValue(SimpleVector current);
+
+	public List<List<SimpleVector>> getCurves() {
 
 		if (gran == 0 || startingPoints.length == 0)
 			return null;
 		else {
 
-			ArrayList<List<Vector>> paths = new ArrayList<List<Vector>>(startingPoints.length);
+			ArrayList<List<SimpleVector>> paths = new ArrayList<List<SimpleVector>>(startingPoints.length);
 			float inc = 1 / new Float(gran).floatValue();
 
 			for (int i = 0; i < this.coord.getDimension(); i++) {
@@ -50,9 +60,9 @@ public abstract class Curves implements Visualization {
 						coord.setMax(startingPoints[i].getMaxInt()[j], j);
 				}
 
-				ArrayList<Vector> path = new ArrayList<Vector>();
+				ArrayList<SimpleVector> path = new ArrayList<SimpleVector>();
 
-				Vector current = startingPoints[i];
+				SimpleVector current = startingPoints[i];
 				path.add(current);
 
 				for (float r = 0; r < length; r += inc) {

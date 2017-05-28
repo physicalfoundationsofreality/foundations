@@ -1,9 +1,9 @@
 package com.gruber.pfr.graphics.visualizations;
 
-import com.gruber.pfr.graphics.elements.Point;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.SimplePoint;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public interface VectorField {
 
-	public Vector getVector(Point origin); 
+	public SimpleVector getVector(SimplePoint origin); 
 }

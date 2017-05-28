@@ -7,7 +7,7 @@ import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.numbers.rational.RationalNumber;
 import com.gruber.pfr.space.rings.Ring;
 
-public class NaturalNumbers extends Ring {
+public class NaturalNumbers extends Ring { // abuse of notation!
 	
 	static NaturalNumbers instance = null;
 	

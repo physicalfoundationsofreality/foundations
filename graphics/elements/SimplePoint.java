@@ -2,15 +2,15 @@ package com.gruber.pfr.graphics.elements;
 
 import com.gruber.pfr.space.numbers.real.RealNumber;
 
-public class RealPoint {
+public class SimplePoint {
 	
-	RealNumber[] coord;
+	float[] coord;
 	
-	public RealPoint(RealNumber[] coordinates) {
+	public SimplePoint(float[] coordinates) {
 		this.coord = coordinates;
 	}
 	
-	public RealNumber[] getCoordinates() {
+	public float[] getCoordinates() {
 		return coord;
 	}
 }

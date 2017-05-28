@@ -3,11 +3,11 @@ package com.gruber.pfr.graphics;
 import java.util.List;
 
 import com.gruber.pfr.graphics.elements.Coordinates;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public interface Visualization {
 
-	public List<List<Vector>> getCurves();
+	public List<List<SimpleVector>> getCurves();
 	
 	public Coordinates getCoordinates();
 	

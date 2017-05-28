@@ -1,0 +1,42 @@
+package com.gruber.pfr.space.numbers.real;
+
+import com.gruber.pfr.space.rings.RingElement;
+import com.gruber.pfr.space.vectors.Vector;
+import com.gruber.pfr.space.vectors.knspaces.KnVector;
+
+public class RealVector extends KnVector {
+
+	public RealVector(RealNumber[] elements) throws InvalidElementsException {
+		super(RnSpace.getInstance(elements.length), elements);
+	}
+
+	public RealVector add(RealVector el) {
+
+		return (RealVector) this.add((Vector) el);
+	}
+
+	public RealVector multiply(RealNumber scalar) {
+
+		return (RealVector) this.multiply((RingElement)scalar);
+	}
+	
+	public RealNumber[] getElements() {
+
+		return (RealNumber[]) super.getElements();
+	}
+	public RnSpace getSpace() {
+		return (RnSpace) super.getSpace();
+	}
+	public float getLength() {
+		
+		return new Double(Math.sqrt(this.getVectorProduct(this))).floatValue();
+	}
+	public float getVectorProduct(RealVector vector) {
+		
+		float length = 0;
+		for(int i = 0; i < this.getDim(); i++)
+			length += this.getElements()[i].multiply(vector.getElements()[i]).base;
+		
+		return length;
+	}
+}

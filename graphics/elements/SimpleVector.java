@@ -1,23 +1,23 @@
 package com.gruber.pfr.graphics.elements;
 
-public class Vector {
+public class SimpleVector {
 
-	Point origin;
-	Point direction;
+	SimplePoint origin;
+	SimplePoint direction;
 
-	public Vector(Point origin) {
+	public SimpleVector(SimplePoint origin) {
 		this.origin = origin;
 	}
 
-	public Point getDirection() {
+	public SimplePoint getDirection() {
 		return direction;
 	}
 
-	public void setDirection(Point direction) {
+	public void setDirection(SimplePoint direction) {
 		this.direction = direction;
 	}
 
-	public Point getOrigin() {
+	public SimplePoint getOrigin() {
 		return origin;
 	}
 

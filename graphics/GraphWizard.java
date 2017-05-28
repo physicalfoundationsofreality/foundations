@@ -18,7 +18,7 @@ import javax.swing.JApplet;
 import javax.swing.JPanel;
 
 import com.gruber.pfr.graphics.elements.Coordinates2D;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public class GraphWizard extends JApplet {
 
@@ -75,12 +75,12 @@ public class GraphWizard extends JApplet {
 			origComposite = g2.getComposite();
 
 			// draw the functions
-			Iterator<List<Vector>> paths = this.settings.vis.getCurves().iterator();
+			Iterator<List<SimpleVector>> paths = this.settings.vis.getCurves().iterator();
 
 			while (paths.hasNext()) {
 
-				Iterator<Vector> points = paths.next().iterator();
-				Vector vec = points.next(); // the first point
+				Iterator<SimpleVector> points = paths.next().iterator();
+				SimpleVector vec = points.next(); // the first point
 
 				if (vec != null) {
 

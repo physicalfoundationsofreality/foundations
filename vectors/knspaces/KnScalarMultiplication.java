@@ -1,5 +1,7 @@
 package com.gruber.pfr.space.vectors.knspaces;
 
+import java.util.Arrays;
+
 import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.rings.RingElement;
 import com.gruber.pfr.space.vectors.ScalarMultiplication;
@@ -11,7 +13,9 @@ public class KnScalarMultiplication extends ScalarMultiplication {
 		
 		try {
 			KnSpace space = (KnSpace)this.getBase();
-			RingElement[] elements = new RingElement[space.getDim()];
+			KnVector ret = (KnVector)((KnVector)op2).clone();
+			
+			RingElement[] elements = Arrays.copyOf(ret.getElements(), ret.getElements().length);
 
 			RingElement el1 = (RingElement) op1;
 			RingElement[] el2 = ((KnVector) op2).getElements();
@@ -20,7 +24,9 @@ public class KnScalarMultiplication extends ScalarMultiplication {
 				elements[i] = el1.multiply(el2[i]);
 			}
 
-			return new KnVector(space, elements);
+			ret.setElements(elements);
+			ret.setSpace(space);
+			return ret;
 		} catch (Exception e) {
 			throw new OperantException(op1);
 		}

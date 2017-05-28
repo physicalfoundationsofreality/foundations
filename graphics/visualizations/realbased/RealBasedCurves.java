@@ -1,21 +1,21 @@
-package com.gruber.pfr.graphics.visualizations;
+package com.gruber.pfr.graphics.visualizations.realbased;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.gruber.pfr.graphics.Visualization;
 import com.gruber.pfr.graphics.elements.Coordinates;
-import com.gruber.pfr.graphics.elements.RealVector;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.RealBasedVector;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
-public abstract class RealCurves implements Visualization {
+public abstract class RealBasedCurves implements Visualization {
 
 	Coordinates coord = null;
 	int gran;
 	int length;
-	RealVector[] startingPoints;
+	RealBasedVector[] startingPoints;
 
-	protected RealCurves(RealVector[] startingPoints, int length, int granularity, int dimension) {
+	protected RealBasedCurves(RealBasedVector[] startingPoints, int length, int granularity, int dimension) {
 
 		this.coord = new Coordinates(new int[dimension], new int[dimension]);
 		this.gran = granularity;
@@ -23,15 +23,23 @@ public abstract class RealCurves implements Visualization {
 		this.length = length;
 	}
 
-	public abstract RealVector getNextCurveValue(RealVector current);
+	public abstract RealBasedVector getNextCurveValue(RealBasedVector current);
 
-	public List<List<Vector>> getCurves() {
+	public RealBasedVector[] getStartingPoints() {
+		return startingPoints;
+	}
+
+	public void setStartingPoints(RealBasedVector[] startingPoints) {
+		this.startingPoints = startingPoints;
+	}
+
+	public List<List<SimpleVector>> getCurves() {
 
 		if (gran == 0 || startingPoints.length == 0)
 			return null;
 		else {
 
-			ArrayList<List<Vector>> paths = new ArrayList<List<Vector>>(startingPoints.length);
+			ArrayList<List<SimpleVector>> paths = new ArrayList<List<SimpleVector>>(startingPoints.length);
 			float inc = 1 / new Float(gran).floatValue();
 
 			for (int i = 0; i < this.coord.getDimension(); i++) {
@@ -50,9 +58,9 @@ public abstract class RealCurves implements Visualization {
 						coord.setMax(startingPoints[i].getMaxInt()[j], j);
 				}
 
-				ArrayList<Vector> path = new ArrayList<Vector>();
+				ArrayList<SimpleVector> path = new ArrayList<SimpleVector>();
 
-				RealVector current = startingPoints[i];
+				RealBasedVector current = startingPoints[i];
 				path.add(current.asVector());
 
 				for (float r = 0; r < length; r += inc) {

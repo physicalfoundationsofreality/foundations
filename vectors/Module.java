@@ -9,7 +9,7 @@ import com.gruber.pfr.space.rings.RingElement;
 
 public abstract class Module implements AdditiveSpace {
 
-	Ring baseRing;
+	protected Ring baseRing;
 	ScalarMultiplication multiplication;
 	AutoOperation addition;
 
@@ -22,6 +22,10 @@ public abstract class Module implements AdditiveSpace {
 
 	public ScalarMultiplication getMultiplication() {
 		return multiplication;
+	}
+
+	public void setBaseRing(Ring baseRing) {
+		this.baseRing = baseRing;
 	}
 
 	public void setMultiplication(ScalarMultiplication multiplication) {
@@ -58,7 +62,7 @@ public abstract class Module implements AdditiveSpace {
 
 	public Operation getAddition() {
 
-		return this.getAddition();
+		return this.addition;
 	}
 
 	public Vector multiply(RingElement el, Vector vector) {

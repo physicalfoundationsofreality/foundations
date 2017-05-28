@@ -1,20 +1,20 @@
-package com.gruber.pfr.graphics.visualizations;
+package com.gruber.pfr.graphics.visualizations.realbased;
 
 import java.util.List;
 
 import com.gruber.pfr.graphics.Visualization2D;
 import com.gruber.pfr.graphics.elements.Coordinates;
 import com.gruber.pfr.graphics.elements.Coordinates2D;
-import com.gruber.pfr.graphics.elements.Vector;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
-public class RealCurves2D implements Visualization2D {
+public class RealBasedCurves2D implements Visualization2D {
 
-	RealCurves curves;
-	public RealCurves2D(RealCurves curves) {
+	RealBasedCurves curves;
+	public RealBasedCurves2D(RealBasedCurves curves) {
 		this.curves = curves;
 	}
 
-	public List<List<Vector>> getCurves() {
+	public List<List<SimpleVector>> getCurves() {
 		
 		return this.curves.getCurves();
 	}
