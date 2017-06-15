@@ -6,10 +6,10 @@ import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.modules.Module;
 import com.gruber.pfr.space.rings.RingElement;
 import com.gruber.pfr.space.vectors.FiniteDimensionalVector;
-import com.gruber.pfr.space.vectors.FiniteDimensionalVectorSpaceBasis;
 import com.gruber.pfr.space.vectors.VectorSpace;
-import com.gruber.pfr.space.vectors.VectorSpan;
 import com.gruber.pfr.space.vectors.affine.AffineSubspace;
+import com.gruber.pfr.space.vectors.basis.FiniteDimensionalVectorSpaceBasis;
+import com.gruber.pfr.space.vectors.basis.VectorSpan;
 
 public class FiniteDimensionalLinearMap extends LinearMap {
 
@@ -31,10 +31,6 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 		this.range = range;
 		this.domain = domain;
 	}
-//	public 	FiniteDimensionalLinearMap(FiniteDimensionalVectorSpaceBasis basis, FiniteDimensionalVector[] kernelBasis) {
-//		
-//		
-//	}
 
 	public FiniteDimensionalVectorSpaceBasis getDomain() {
 		return domain;
@@ -79,20 +75,20 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 	public Set getPreImage(Set image) {
 
 		// normalize bases to semi identity
-		this.getImage();
-		this.getKernel();
+//		this.getImage();
+//		this.getKernel();
+//
+//		FiniteDimensionalVector vec = (FiniteDimensionalVector) image;
+//		FiniteDimensionalVector proj = (FiniteDimensionalVector) ((VectorSpan) this.image).getProjection(vec);
+//		if (!vec.equals(proj))
+//			return null;
+//
+//		FiniteDimensionalVector pre = (FiniteDimensionalVector) this.domain.getBaseSpace().getNullElement();
+//		for (int i = 0; i < this.image.getDim(); i++) 
+//			pre = (FiniteDimensionalVector) pre
+//					.add(this.domain.getBaseVectors()[i].multiply(this.range.getCoordinate(i, vec)));
 
-		FiniteDimensionalVector vec = (FiniteDimensionalVector) image;
-		FiniteDimensionalVector proj = (FiniteDimensionalVector) ((VectorSpan) this.image).getProjection(vec);
-		if (!vec.equals(proj))
-			return null;
-
-		FiniteDimensionalVector pre = (FiniteDimensionalVector) this.domain.getBaseSpace().getNullElement();
-		for (int i = 0; i < this.image.getDim(); i++) 
-			pre = (FiniteDimensionalVector) pre
-					.add(this.domain.getBaseVectors()[i].multiply(this.range.getCoordinate(i, vec)));
-
-		return new AffineSubspace(this.domain.getBaseSpace(),pre,this.kernel);
+		return null; //new AffineSubspace(this.domain.getBaseSpace(),pre,this.kernel);
 	}
 
 	public Module getKernel() {
@@ -112,7 +108,7 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 		}
 		FiniteDimensionalVector[] basis = new FiniteDimensionalVector[ims.size()];
 		basis = ims.toArray(basis);
-		return new VectorSpan(basis, (VectorSpace) this.domain.getBaseSpace());
+		return new VectorSpan(basis, this.domain);
 	}
 
 	public Module getImage() {
@@ -132,7 +128,7 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 		}
 		FiniteDimensionalVector[] basis = new FiniteDimensionalVector[ims.size()];
 		basis = ims.toArray(basis);
-		return new VectorSpan(basis, (VectorSpace) this.range.getBaseSpace());
+		return new VectorSpan(basis, this.range);
 	}
 
 	// transform image basis such that matrix has column triangulated form

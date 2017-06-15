@@ -1,56 +1,55 @@
-package com.gruber.pfr.space.vectors;
+package com.gruber.pfr.space.vectors.basis;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Random;
 
 import com.gruber.pfr.space.base.Set;
-import com.gruber.pfr.space.modules.Module;
 import com.gruber.pfr.space.rings.RingElement;
+import com.gruber.pfr.space.vectors.FiniteDimensionalVector;
+import com.gruber.pfr.space.vectors.FiniteDimensionalVectorSpace;
+import com.gruber.pfr.space.vectors.Vector;
+import com.gruber.pfr.space.vectors.VectorSpace;
 
-public class FiniteDimensionalVectorSpaceBasis implements VectorSpaceBasis {
+public abstract class FiniteDimensionalVectorSpaceBasis implements VectorSpaceBasis {
 
 	FiniteDimensionalVector[] baseVectors;
 	FiniteDimensionalVectorSpace space;
 	Random rand = new Random(System.currentTimeMillis());
 
-	Method getCoordinate;
-
-	public FiniteDimensionalVectorSpaceBasis(FiniteDimensionalVectorSpace space, FiniteDimensionalVector[] baseVectors,
-			Method getCoordinate) {
+	public FiniteDimensionalVectorSpaceBasis(FiniteDimensionalVectorSpace space,
+			FiniteDimensionalVector[] baseVectors) {
 		// super(space);
 
 		this.baseVectors = baseVectors;
-		this.getCoordinate = getCoordinate;
 	}
 
 	public FiniteDimensionalVector[] getBaseVectors() {
 		return baseVectors;
 	}
 	
+	public RingElement[] getCoordinates(Vector vector) {
+		
+		RingElement[] els = new RingElement[baseVectors.length];
+		for(int i = 0; i < els.length; i++) 
+			els[i] = this.getCoordinate(i, vector);
+			
+		return els;
+	}
+
 	public void setBaseVectors(FiniteDimensionalVector[] baseVectors) {
 		this.baseVectors = baseVectors;
 	}
 
-	public RingElement getCoordinate(Vector baseVector, Vector vector) {
-
-		try {
-			return (RingElement) this.getCoordinate.invoke(baseVector, vector);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+	public abstract RingElement getCoordinate(Vector baseVector, Vector vector);
 
 	public RingElement getCoordinate(int position, Vector vector) {
 		return this.getCoordinate(baseVectors[position], vector);
 	}
 
-	public Module getBaseSpace() {
+	public VectorSpace getBaseSpace() {
 		return this.space;
 	}
 
-	public void setBaseSpace(Module space) {
+	public void setBaseSpace(VectorSpace space) {
 
 		this.space = (FiniteDimensionalVectorSpace) space;
 	}
@@ -82,23 +81,9 @@ public class FiniteDimensionalVectorSpaceBasis implements VectorSpaceBasis {
 	// scale and add vector i with vector j, i not j
 	public void modifyVector(int i, int j, RingElement scalar) {
 
-		if (i == j)
+		if (i == j && scalar.equals(scalar.getRing().getNegative(scalar.getRing().getOneElement())))
 			return;
 
 		this.baseVectors[i] = (FiniteDimensionalVector) this.baseVectors[i].add(baseVectors[j].multiply(scalar));
-	}
-
-	public FiniteDimensionalVectorSpaceBasis getSubspaceBasis(FiniteDimensionalVector[] baseVectors,
-			FiniteDimensionalVectorSpaceBasis supBasis) {
-
-		FiniteDimensionalVectorSpace space;
-		space = (FiniteDimensionalVectorSpace) ((VectorSpace) this.getBaseSpace()).clone();
-
-		try {
-			return new FiniteDimensionalVectorSpaceBasis(space, baseVectors, supBasis.getClass().getMethod("getCoordinates", Vector.class,Vector.class));
-		} catch (NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 }
