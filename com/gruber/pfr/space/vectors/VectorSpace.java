@@ -22,4 +22,7 @@ public abstract class VectorSpace extends Module {
 		this.baseSpace = baseSpace;
 		this.subSpace = subSpace;
 	}
+	public Field getBaseField() {
+		return (Field)this.baseRing;
+	}
 }

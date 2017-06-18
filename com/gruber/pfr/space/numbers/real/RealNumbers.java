@@ -54,7 +54,7 @@ public class RealNumbers extends Field {
 		
 		try {
 			RealNumber num = (RealNumber)element;
-			return new RealNumber(-num.base);
+			return new RealNumber(new Double(-num.base).floatValue());
 					
 		} catch(Exception e) {
 			return null;
@@ -78,7 +78,7 @@ public class RealNumbers extends Field {
 
 		try {
 			RealNumber num = (RealNumber)element;
-			return new RealNumber(1/num.base);
+			return new RealNumber(new Double(1/num.base).floatValue());
 					
 		} catch(Exception e) {
 			return null;

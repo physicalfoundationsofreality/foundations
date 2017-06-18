@@ -1,7 +1,6 @@
 package com.gruber.pfr.space.vectors.affine;
 
 import com.gruber.pfr.space.base.Set;
-import com.gruber.pfr.space.base.map.Map;
 import com.gruber.pfr.space.modules.Module;
 import com.gruber.pfr.space.vectors.Vector;
 

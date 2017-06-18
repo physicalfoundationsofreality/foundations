@@ -1,6 +1,7 @@
 package com.gruber.pfr.graphics.visualizations.realbased;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.gruber.pfr.graphics.Visualization;
@@ -32,14 +33,32 @@ public abstract class RealBasedCurves implements Visualization {
 	public void setStartingPoints(RealBasedVector[] startingPoints) {
 		this.startingPoints = startingPoints;
 	}
+	
+//	public List<List<SimpleVector>> getCurves() {
+//		
+//		List<List<RealBasedVector>> realCurves = this.getRealCurves();
+//		List<List<SimpleVector>> curves = new ArrayList<List<SimpleVector>>();
+//		
+//		Iterator<List<RealBasedVector>> curvesIter = realCurves.iterator();
+//		while(curvesIter.hasNext()) {
+//			ArrayList<SimpleVector> curve = new ArrayList<SimpleVector>();
+//			
+//			Iterator<RealBasedVector> curveIter = curvesIter.next().iterator();
+//			while(curveIter.hasNext()) 
+//				curve.add(curveIter.next().asVector());
+//			
+//			curves.add(curve);
+//		}
+//		return curves;
+//	}
 
-	public List<List<SimpleVector>> getCurves() {
+	public List<List<RealBasedVector>> getRealCurves() {
 
 		if (gran == 0 || startingPoints.length == 0)
 			return null;
 		else {
 
-			ArrayList<List<SimpleVector>> paths = new ArrayList<List<SimpleVector>>(startingPoints.length);
+			ArrayList<List<RealBasedVector>> paths = new ArrayList<List<RealBasedVector>>(startingPoints.length);
 			float inc = 1 / new Float(gran).floatValue();
 
 			for (int i = 0; i < this.coord.getDimension(); i++) {
@@ -58,10 +77,10 @@ public abstract class RealBasedCurves implements Visualization {
 						coord.setMax(startingPoints[i].getMaxInt()[j], j);
 				}
 
-				ArrayList<SimpleVector> path = new ArrayList<SimpleVector>();
+				ArrayList<RealBasedVector> path = new ArrayList<RealBasedVector>();
 
 				RealBasedVector current = startingPoints[i];
-				path.add(current.asVector());
+				path.add(current);
 
 				for (float r = 0; r < length; r += inc) {
 
@@ -76,7 +95,7 @@ public abstract class RealBasedCurves implements Visualization {
 							coord.setMax(current.getMaxInt()[j], j);
 					}
 
-					path.add(current.asVector());
+					path.add(current);
 				}
 				paths.add(path);
 			}

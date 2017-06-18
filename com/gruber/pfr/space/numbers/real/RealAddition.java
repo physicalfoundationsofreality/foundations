@@ -17,7 +17,8 @@ public class RealAddition extends AutoOperation {
 		try{
 			c1 = (RealNumber)op1;
 			c2 = (RealNumber)op2;
-			return new RealNumber(c1.base + c2.base);
+// we assume precission only up to float precissio
+			return new RealNumber(new Double(c1.base + c2.base).floatValue());
 		} catch(Exception e) {
 			
 			if(c1 == null)

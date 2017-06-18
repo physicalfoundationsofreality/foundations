@@ -35,7 +35,6 @@ public abstract class Function implements Visualization2D {
 			float[] oldpoint = new float[2];
 			oldpoint[0] = coord.getMinX() - inc;
 
-			int pos = 0;
 			oldpoint[1] = getFunctionValue(oldpoint[0]);
 
 			coord.setMinY(new Double(Math.floor(oldpoint[1])).intValue());
@@ -74,7 +73,6 @@ public abstract class Function implements Visualization2D {
 				oldpoint = point;
 				
 				path.add(vec);
-				pos++;
 			}
 			paths.add(path);
 			return paths;

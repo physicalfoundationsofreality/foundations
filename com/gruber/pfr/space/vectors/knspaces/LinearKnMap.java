@@ -5,7 +5,7 @@ import com.gruber.pfr.space.modules.Module;
 import com.gruber.pfr.space.rings.RingElement;
 import com.gruber.pfr.space.vectors.linearmaps.LinearMap;
 
-public class LinearKnMap extends LinearMap {
+public abstract class LinearKnMap extends LinearMap {
 	
 	RingElement[][] matrix;
 	
@@ -52,6 +52,12 @@ public class LinearKnMap extends LinearMap {
 
 	@Override
 	public Module getImage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LinearMap getInverse() {
 		// TODO Auto-generated method stub
 		return null;
 	}

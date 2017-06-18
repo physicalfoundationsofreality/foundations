@@ -6,7 +6,9 @@ public interface Matrix {
 
 	public Ring getBaseRing();
 	
-	public void setBaseRing(Ring baseRing);
-	
 	public Matrix getTransposed();
+	
+	public Matrix getInverse();
+	
+	public Matrix multiply(Matrix rightMultiplicant);
 }

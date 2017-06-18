@@ -3,7 +3,6 @@ package com.gruber.pfr.space.modules;
 import com.gruber.pfr.space.base.Operation;
 import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.rings.RingElement;
-import com.gruber.pfr.space.vectors.knspaces.KnSpace;
 
 public abstract class InnerProduct implements Operation {
 

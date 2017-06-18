@@ -5,8 +5,6 @@ import java.util.Arrays;
 
 import com.gruber.pfr.space.numbers.real.RealNumber;
 import com.gruber.pfr.space.numbers.real.RealVector;
-import com.gruber.pfr.space.rings.RingElement;
-import com.gruber.pfr.space.vectors.Vector;
 
 public class PhaseVector extends RealVector {
 

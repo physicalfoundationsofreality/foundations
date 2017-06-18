@@ -23,6 +23,10 @@ public class RealBasedVector {
 		return origin;
 	}
 
+	public void setOrigin(RealVector origin) {
+		this.origin = origin;
+	}
+
 	public int[] getMaxInt() {
 
 		int[] max = new int[origin.getDim()];

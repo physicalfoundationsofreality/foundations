@@ -29,7 +29,7 @@ public class RealVector extends KnVector {
 	}
 	public float getLength() {
 		
-		return new Double(Math.sqrt(this.innerProduct(this).getBase())).floatValue();
+		return new Double(Math.sqrt(this.innerProduct(this).base)).floatValue();
 	}
 	public RealNumber innerProduct(RealVector vector) {
 

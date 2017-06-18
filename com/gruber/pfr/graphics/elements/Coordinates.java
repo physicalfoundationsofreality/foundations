@@ -25,4 +25,10 @@ public class Coordinates {
 	public int getDimension() {
 		return min.length;
 	}
+	public int[] getMin() {
+		return min;
+	}
+	public int[] getMax() {
+		return max;
+	}
 }

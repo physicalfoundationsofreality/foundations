@@ -1,7 +1,6 @@
 package com.gruber.pfr.space.vectors.knspaces;
 
 import com.gruber.pfr.space.base.AutoOperation;
-import com.gruber.pfr.space.base.Operation.OperantException;
 import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.modules.InnerProduct;
 import com.gruber.pfr.space.modules.InnerProductSpace;
@@ -16,7 +15,7 @@ public class KnSpace extends FiniteDimensionalVectorSpace implements InnerProduc
 
 	KnInnerProduct innerProduct;
 
-	protected KnSpace(Field baseField, int dim) {
+	public KnSpace(Field baseField, int dim) {
 
 		super(baseField, new KnAddition(), new KnScalarMultiplication(), dim);
 
@@ -93,5 +92,9 @@ public class KnSpace extends FiniteDimensionalVectorSpace implements InnerProduc
 	public RingElement innerProduct(ModuleElement vec1, ModuleElement vec2) {
 
 		return (RingElement) this.innerProduct.operate(vec1, vec2);
+	}
+	public KnStandardBasis getStandardBasis() {
+		
+		return new KnStandardBasis(this);
 	}
 }

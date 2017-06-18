@@ -19,8 +19,11 @@ import com.gruber.pfr.graphics.visualizations.realbased.AdvancedNumericCurvesApp
 import com.gruber.pfr.graphics.visualizations.realbased.RealBasedCircleField2D;
 import com.gruber.pfr.graphics.visualizations.realbased.RealBasedCurves;
 import com.gruber.pfr.graphics.visualizations.realbased.RealBasedCurves2D;
+import com.gruber.pfr.graphics.visualizations.realbased.RealBasedCurves2DProjection;
 import com.gruber.pfr.space.numbers.real.RealNumber;
+import com.gruber.pfr.space.numbers.real.RealNumbers;
 import com.gruber.pfr.space.numbers.real.RealVector;
+import com.gruber.pfr.space.vectors.linearmaps.FiniteMatrix;
 
 public class Main {
 
@@ -103,6 +106,51 @@ public class Main {
 			
 			return new RealBasedCurves2D(new PhaseSpaceCurvesApproximation(start, vel, 30, 10, 1,
 					new CentralForceField(1, 1, new Double(-2).floatValue())));
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static Visualization2D phaseSpaceProjectionTest() {
+
+		RealVector[] start = new RealVector[1];
+		RealVector[] vel = new RealVector[1];
+
+		try {
+			start[0] = new RealVector(new RealNumber[] { new RealNumber(10), new RealNumber(5) });
+			vel[0] = new RealVector(new RealNumber[] { new RealNumber(-1), new RealNumber(-2) });
+//			start[1] = new RealVector(new RealNumber[] { new RealNumber(2) });
+//			vel[1] = new RealVector(new RealNumber[] { new RealNumber(0) });
+//			
+//			start[2] = new RealVector(new RealNumber[] { new RealNumber(4) });
+//			vel[2] = new RealVector(new RealNumber[] { new RealNumber(0) });
+			
+			//projection onto space coordinates
+			RealNumber[][] proj1 = { { new RealNumber(1), new RealNumber(0), new RealNumber(0), new RealNumber(0) },
+					 { new RealNumber(0), new RealNumber(1), new RealNumber(0), new RealNumber(0), }};
+
+			//projection onto velocity coordinates
+			RealNumber[][] proj2 = { { new RealNumber(0), new RealNumber(0), new RealNumber(1), new RealNumber(0) },
+					 { new RealNumber(0), new RealNumber(0), new RealNumber(0), new RealNumber(1), }};
+			
+			//projection onto X space/velocity coordinates
+			RealNumber[][] proj3 = { { new RealNumber(1), new RealNumber(0), new RealNumber(0), new RealNumber(0) },
+					 { new RealNumber(0), new RealNumber(0), new RealNumber(1), new RealNumber(0), }};
+			
+			//projection onto Y space/velocity coordinates
+			RealNumber[][] proj4 = { { new RealNumber(0), new RealNumber(1), new RealNumber(0), new RealNumber(0) },
+					 { new RealNumber(0), new RealNumber(0), new RealNumber(0), new RealNumber(1), }};
+			
+			//projection onto X-Y space/velocity coordinates
+			RealNumber[][] proj5 = { { new RealNumber(new Double(1/Math.sqrt(2)).floatValue()), new RealNumber(new Double(1/Math.sqrt(2)).floatValue()), new RealNumber(0), new RealNumber(0) },
+					 { new RealNumber(0), new RealNumber(0), new RealNumber(new Double(1/Math.sqrt(2)).floatValue()), new RealNumber(new Double(1/Math.sqrt(2)).floatValue()) }};
+			
+			FiniteMatrix projection = new FiniteMatrix(RealNumbers.getInstance(), proj1);
+			
+			return new RealBasedCurves2DProjection(new PhaseSpaceCurvesApproximation(start, vel, 30, 10, 1,
+					new CentralForceField(1, 1, new Double(-2).floatValue())), projection);
 
 
 		} catch (Exception e) {

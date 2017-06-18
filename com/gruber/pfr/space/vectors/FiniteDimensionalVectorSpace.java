@@ -1,7 +1,6 @@
 package com.gruber.pfr.space.vectors;
 
 import com.gruber.pfr.space.base.AutoOperation;
-import com.gruber.pfr.space.modules.LinearIndependentSet;
 import com.gruber.pfr.space.modules.ScalarMultiplication;
 import com.gruber.pfr.space.rings.Field;
 

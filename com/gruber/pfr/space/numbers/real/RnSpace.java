@@ -2,7 +2,6 @@ package com.gruber.pfr.space.numbers.real;
 
 import java.util.Arrays;
 
-import com.gruber.pfr.space.rings.RingElement;
 import com.gruber.pfr.space.vectors.Vector;
 import com.gruber.pfr.space.vectors.knspaces.KnSpace;
 

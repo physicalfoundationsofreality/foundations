@@ -1,7 +1,5 @@
 package com.gruber.pfr.graphics.elements;
 
-import com.gruber.pfr.space.numbers.real.RealNumber;
-
 public class SimplePoint {
 	
 	float[] coord;

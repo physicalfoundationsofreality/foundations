@@ -5,8 +5,8 @@ import com.gruber.pfr.space.rings.RingElement;
 
 public class ComplexNumber extends RingElement {
 
-	float re;
-	float im;
+	double re;
+	double im;
 
 	public ComplexNumber(float re, float im) {
 
@@ -17,11 +17,11 @@ public class ComplexNumber extends RingElement {
 	}
 
 	public float getRealPart() {
-		return re;
+		return new Double(re).floatValue();
 	}
 
-	public float getImaginaryPart() {
-		return im;
+	public double getImaginaryPart() {
+		return new Double(im).floatValue();
 	}
 
 	public boolean isElement(Set set) {

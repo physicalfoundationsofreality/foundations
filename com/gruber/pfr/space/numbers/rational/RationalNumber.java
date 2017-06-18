@@ -1,7 +1,6 @@
 package com.gruber.pfr.space.numbers.rational;
 
 import com.gruber.pfr.space.base.Set;
-import com.gruber.pfr.space.numbers.real.RealNumber;
 import com.gruber.pfr.space.rings.RingElement;
 
 public class RationalNumber extends RingElement {

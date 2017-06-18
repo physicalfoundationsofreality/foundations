@@ -1,12 +1,13 @@
 package com.gruber.pfr.space.numbers.real;
 
 import com.gruber.pfr.space.base.Set;
-import com.gruber.pfr.space.numbers.complex.ComplexNumber;
 import com.gruber.pfr.space.rings.RingElement;
 
 public class RealNumber extends RingElement {
 
-	float base;
+// We use double values, however, we instatiate only with float
+// so calculations are done with higher precssions than stored
+	double base;
 
 	public RealNumber(float base) {
 
@@ -16,7 +17,7 @@ public class RealNumber extends RingElement {
 	}
 
 	public float getBase() {
-		return base;
+		return new Double(base).floatValue();
 	}
 
 	public boolean isElement(Set set) {
@@ -24,10 +25,10 @@ public class RealNumber extends RingElement {
 	}
 	
 	public boolean equals(Object obj) {
-		
+// to avoid rounding error caused imprecission, we compare only float values
 		try {
 			RealNumber num = (RealNumber) obj;
-			if (base == num.base)
+			if (this.getBase() == num.getBase())
 				return true;
 		} catch (Exception e) {
 		}

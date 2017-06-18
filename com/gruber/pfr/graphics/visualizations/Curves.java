@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.gruber.pfr.graphics.Visualization;
 import com.gruber.pfr.graphics.elements.Coordinates;
-import com.gruber.pfr.graphics.elements.SimplePoint;
 import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public abstract class Curves implements Visualization {

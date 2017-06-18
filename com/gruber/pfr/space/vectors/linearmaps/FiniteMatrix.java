@@ -1,10 +1,7 @@
 package com.gruber.pfr.space.vectors.linearmaps;
 
-import java.lang.reflect.Array;
-
 import com.gruber.pfr.space.rings.Ring;
 import com.gruber.pfr.space.rings.RingElement;
-import com.gruber.pfr.space.vectors.FiniteDimensionalVector;
 
 public class FiniteMatrix implements Matrix {
 
@@ -14,13 +11,74 @@ public class FiniteMatrix implements Matrix {
 	FiniteMatrix rowNormForm;
 	FiniteMatrix colNormalizer;
 	FiniteMatrix rowNormalizer;
-	
+	int rank = 0;
+
 	public FiniteMatrix(Ring baseRing, RingElement[][] matrix) {
 		super();
 		this.matrix = matrix;
 		this.baseRing = baseRing;
-		
-		int pos = 0;
+	}
+
+	public RingElement[] multiply(RingElement[] vec) {
+
+		if (vec.length == 0)
+			return vec;
+
+		if (matrix[0].length != vec.length)
+			return null;
+
+		RingElement[] im = new RingElement[matrix.length];
+		for (int i = 0; i < im.length; i++) {
+
+			im[i] = (RingElement) this.baseRing.getNullElement();
+			for (int j = 0; j < vec.length; j++)
+				im[i] = im[i].add(matrix[i][j].multiply(vec[j]));
+		}
+		return im;
+	}
+
+	public RingElement[][] getMatrix() {
+		return matrix;
+	}
+
+	public Ring getBaseRing() {
+		return baseRing;
+	}
+
+	public void exchangeRows(int i, int j) {
+
+		RingElement[] rowi = matrix[i];
+		matrix[i] = matrix[j];
+		matrix[j] = rowi;
+	}
+
+	public int getColumnNumber() {
+
+		if (this.matrix.length == 0)
+			return 0;
+		else
+			return this.matrix[0].length;
+	}
+
+	public int getRownNumber() {
+
+		return this.matrix.length;
+	}
+
+	/*
+	 * columns normal diagonal form for Matrix with Rank r: all columns index >
+	 * r are 0, top left corner r-dim unit matrix
+	 */
+	public FiniteMatrix getColumnsDiaginalNormalizedForm() {
+
+		if (this.colNormForm == null)
+			this.diagonolize();
+
+		return this.colNormForm;
+	}
+
+	protected void diagonolize() {
+
 		int dimCol = this.getColumnNumber();
 		int dimRow = this.getRownNumber();
 		int colPos = 0;
@@ -33,7 +91,7 @@ public class FiniteMatrix implements Matrix {
 		RingElement[][] rowNormalForm = matrix.clone();
 		RingElement[][] colNormal = new RingElement[dimCol][dimCol];
 		RingElement[][] rowNormal = new RingElement[dimRow][dimRow];
-		
+
 		for (int i = 0; i < dimCol; i++)
 			for (int j = 0; j < dimCol; j++)
 				if (i == j)
@@ -47,85 +105,79 @@ public class FiniteMatrix implements Matrix {
 					rowNormal[i][j] = oneEl;
 				else
 					rowNormal[i][j] = nullEl;
-		
-		this.colNormalizer = new FiniteMatrix(baseRing,colNormal);
-		this.rowNormalizer = new FiniteMatrix(baseRing,rowNormal);
-		this.colNormForm = new FiniteMatrix(baseRing,colNormalForm);
-		this.rowNormalizer = new FiniteMatrix(baseRing,rowNormalForm);
-		
+
+		this.colNormalizer = new FiniteMatrix(baseRing, colNormal);
+		this.rowNormalizer = new FiniteMatrix(baseRing, rowNormal);
+		this.colNormForm = new FiniteMatrix(baseRing, colNormalForm);
+		this.rowNormalizer = new FiniteMatrix(baseRing, rowNormalForm);
+
 		while (rowPos < dimRow) {
 
 			// find a remaining Vector with map factor not 0
-			for (int i = pos; i < dimRow; i++) {
-				if (!this.colNormalizer.getElement(pos, i).equals(nullEl)) {
-					this.colNormalizer.exchangeColumns(pos, i);
-					this.colNormForm.exchangeColumns(pos, i);
+			for (int i = rowPos; i < dimRow; i++) {
+				if (!this.rowNormForm.getElement(colPos, i).equals(nullEl)) {
+					this.rowNormalizer.exchangeRows(rowPos, i);
+					this.rowNormForm.exchangeRows(rowPos, i);
 					break;
 				}
 			}
-			if (this.matrix.getElement(colPos, pos).equals(this.matrix.getBaseRing().getNullElement())) {
+			if (this.rowNormForm.getElement(colPos, rowPos).equals(nullEl)) {
 				colPos++;
 				continue;
 			}
 
-			RingElement factor = matrix.getElement(colPos, pos).getInverse().getNegative();
+			RingElement factor = rowNormForm.getElement(colPos, rowPos).getInverse();
+			this.rowNormForm.scaleRow(rowPos, factor);
+			this.rowNormalizer.scaleRow(rowPos, factor);
+
+			rank++;
+
 			// adapt the rest of the vectors and matrix rows to to factor 0 at
-			// pos
-			for (int i = pos + 1; i < size; i++) {
-				this.range.modifyVector(i, pos, matrix.getElement(i, pos - 1).multiply(factor));
-				this.matrix.addColumn(i, pos, factor);
+			// rowPpos
+			for (int i = 0; i < dimRow; i++) {
+				if (i != rowPos) {
+					RingElement multiplier = rowNormForm.getElement(colPos, i).getNegative();
+					this.rowNormForm.addRow(i, rowPos, multiplier);
+					this.rowNormalizer.addRow(i, rowPos, multiplier);
+				}
 			}
-			this.range.getBaseVectors()[pos] = (FiniteDimensionalVector) this.range.getBaseVectors()[pos]
-					.multiply(matrix.getElement(pos, colPos).getInverse());
-			pos++;
+
+			rowPos++;
 			colPos++;
 		}
-	}
 
-	public RingElement[][] getMatrix() {
-		return matrix;
-	}
+		while (colPos < dimCol) {
 
-	public void setMatrix(RingElement[][] matrix) {
-		this.matrix = matrix;
-	}
+			// find a remaining Vector with map factor not 0
+			for (int i = colPos; i < dimCol; i++) {
+				if (!this.colNormForm.getElement(i, rowPos).equals(nullEl)) {
+					this.colNormalizer.exchangeColumns(i, colPos);
+					this.colNormForm.exchangeColumns(i, colPos);
+					break;
+				}
+			}
+			if (this.colNormForm.getElement(colPos, rowPos).equals(nullEl)) {
+				rowPos++;
+				continue;
+			}
 
-	public Ring getBaseRing() {
-		return baseRing;
-	}
+			RingElement factor = colNormForm.getElement(colPos, rowPos).getInverse();
+			this.colNormForm.scaleColumn(colPos, factor);
+			this.colNormalizer.scaleColumn(colPos, factor);
 
-	public void setBaseRing(Ring baseSpace) {
-		this.baseRing = baseSpace;
-	}
+			// adapt the rest of the vectors and matrix rows to to factor 0 at
+			// rowPpos
+			for (int i = 0; i < dimCol; i++) {
+				if (i != colPos) {
+					RingElement multiplier = colNormForm.getElement(i, rowPos).getNegative();
+					this.colNormForm.addRow(i, colPos, multiplier);
+					this.colNormalizer.addRow(i, colPos, multiplier);
+				}
+			}
 
-	public void exchangeRows(int i, int j) {
-
-		RingElement[] rowi = matrix[i];
-		matrix[i] = matrix[j];
-		matrix[j] = rowi;
-	}
-
-	public int getColumnNumber() {
-		return this.matrix.length;
-	}
-
-	public int getRownNumber() {
-		if (this.matrix.length == 0)
-			return 0;
-		else
-			return this.matrix[0].length;
-	}
-
-	/*
-	 * columns normal diagonal form for Matrix with Rank r: all columns index >
-	 * r are 0, top left corner r-dim unit matrix
-	 */
-	public FiniteMatrix getColumnsDiaginalNormalizedForm() {
-
-		if (this.colNormForm != null)
-			return this.colNormForm;
-
-
+			rowPos++;
+			colPos++;
+		}
 	}
 
 	/*
@@ -133,7 +185,27 @@ public class FiniteMatrix implements Matrix {
 	 * 0, top left corner r-dim unit matrix
 	 */
 	public FiniteMatrix getRowsDiaginalNormalizedForm() {
-		return null;
+
+		if (this.rowNormForm == null)
+			this.diagonolize();
+
+		return this.rowNormForm;
+	}
+
+	public FiniteMatrix getColumnsNormalizer() {
+
+		if (this.colNormalizer == null)
+			this.diagonolize();
+
+		return this.colNormalizer;
+	}
+
+	public FiniteMatrix getRowsNormalizer() {
+
+		if (this.rowNormalizer == null)
+			this.diagonolize();
+
+		return this.rowNormalizer;
 	}
 
 	public void exchangeColumns(int i, int j) {
@@ -186,5 +258,38 @@ public class FiniteMatrix implements Matrix {
 
 	public RingElement getElement(int i, int j) {
 		return this.matrix[i][j];
+	}
+
+	public Matrix getInverse() {
+
+		if (this.rowNormalizer == null)
+			this.diagonolize();
+
+		if (rank < this.getColumnNumber() || rank < this.getRownNumber())
+			return null;
+		else
+			return this.colNormalizer;
+	}
+
+	public int getRank() {
+
+		if (this.rowNormalizer == null)
+			this.diagonolize();
+
+		return rank;
+	}
+
+	public Matrix multiply(Matrix rightMultiplicant) {
+		
+		FiniteMatrix multi = (FiniteMatrix)rightMultiplicant;
+		
+		RingElement[][] mult = new RingElement[this.getRownNumber()][multi.getColumnNumber()];
+		for(int i = 0; i < mult.length; i++)
+			for(int j = 0; j < multi.getColumnNumber(); j++) {
+				mult[i][j] = (RingElement)this.baseRing.getNullElement();
+				for(int k = 0; k < this.getColumnNumber(); k++)
+					mult[i][j].add(this.matrix[i][k].multiply(multi.getElement(k, j)));
+			}
+		return new FiniteMatrix(this.baseRing,mult);
 	}
 }

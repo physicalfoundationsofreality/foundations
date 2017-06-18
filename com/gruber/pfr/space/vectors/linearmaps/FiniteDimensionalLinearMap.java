@@ -1,12 +1,9 @@
 package com.gruber.pfr.space.vectors.linearmaps;
 
-import java.util.ArrayList;
-
 import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.modules.Module;
 import com.gruber.pfr.space.rings.RingElement;
 import com.gruber.pfr.space.vectors.FiniteDimensionalVector;
-import com.gruber.pfr.space.vectors.VectorSpace;
 import com.gruber.pfr.space.vectors.affine.AffineSubspace;
 import com.gruber.pfr.space.vectors.basis.FiniteDimensionalVectorSpaceBasis;
 import com.gruber.pfr.space.vectors.basis.VectorSpan;
@@ -21,6 +18,12 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 	FiniteDimensionalVectorSpaceBasis range;
 	VectorSpan kernel;
 	VectorSpan image;
+	VectorSpan coKernel; // there is no unique cokernel, we just choose one
+	FiniteMatrix isoMatrix; // the matrix of the isomorphism between coKernel
+							// and image
+	FiniteDimensionalLinearMap isoMap; // The map from cokernel to kernel
+	FiniteDimensionalLinearMap isoInverseMap;
+	FiniteDimensionalLinearMap inverseMap;
 
 	public FiniteDimensionalLinearMap(FiniteDimensionalVectorSpaceBasis domain, FiniteDimensionalVectorSpaceBasis range,
 			FiniteMatrix matrix) {
@@ -30,41 +33,85 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 		this.matrix = matrix;
 		this.range = range;
 		this.domain = domain;
+
+		// get kernel: if M*B = CN and e in Kernel CN -> B*e in Kernel M
+		int dimKer = matrix.getColumnNumber() - matrix.getRank();
+
+		FiniteDimensionalVector[] kerVec = new FiniteDimensionalVector[dimKer];
+
+		for (int i = matrix.getRank(); i < matrix.getColumnNumber(); i++) {
+
+			RingElement[] vec = matrix.getColumnsNormalizer().matrix[i];
+
+			kerVec[i - matrix.getRank()] = (FiniteDimensionalVector) domain.getBaseSpace().getNullElement();
+			for (int j = 0; j < matrix.getColumnNumber(); j++)
+				kerVec[i - matrix.getRank()] = (FiniteDimensionalVector) kerVec[i - matrix.getRank()]
+						.add(domain.getBaseVectors()[j].multiply(vec[j]));
+		}
+		kernel = new VectorSpan(kerVec, domain);
+
+		// get image: if A*M = RN and e in Image RN -> inv(A)*e in Image M
+		FiniteDimensionalVector[] imVec = new FiniteDimensionalVector[matrix.getRank()];
+
+		for (int i = 0; i < matrix.getRank(); i++) {
+
+			RingElement[] vec = ((FiniteMatrix) matrix.getRowsNormalizer().getInverse()).matrix[i];
+
+			imVec[i] = (FiniteDimensionalVector) range.getBaseSpace().getNullElement();
+			for (int j = 0; j < matrix.getRownNumber(); j++)
+				imVec[i] = (FiniteDimensionalVector) imVec[i].add(range.getBaseVectors()[j].multiply(vec[j]));
+		}
+		image = new VectorSpan(imVec, range);
+
+		/*
+		 * get the cokernel as a complement to the kernel: Let MC be Matrix from
+		 * kernel basis to image basis: M*B = inv(A)*MC <-> A*M*B = MC (do
+		 * summation!). For this use komplete Basis B of kernel + cokernel on
+		 * domain and inv(A)*basis range on range -> kernel is mapped to 0 and
+		 * non-image base vectors have 0 coordinate -> MC has 0 on right columns
+		 * and bottom rows > rank -> take rank x rank matrix
+		 */
+		FiniteDimensionalVector[] cokerVec = new FiniteDimensionalVector[matrix.getRank()];
+		FiniteMatrix isoFull = (FiniteMatrix) matrix.getRowsNormalizer().multiply(matrix)
+				.multiply(matrix.getColumnsDiaginalNormalizedForm());
+
+		RingElement[][] isoEls = new RingElement[matrix.getRank()][matrix.getRank()];
+
+		for (int i = 0; i < matrix.getRank(); i++) {
+
+			RingElement[] vec = matrix.getColumnsNormalizer().matrix[i];
+
+			cokerVec[i] = (FiniteDimensionalVector) domain.getBaseSpace().getNullElement();
+			for (int j = 0; j < matrix.getRank(); j++) {
+				isoEls[i][j] = isoFull.getElement(i, j);
+				cokerVec[i] = (FiniteDimensionalVector) cokerVec[i].add(domain.getBaseVectors()[j].multiply(vec[j]));
+			}
+		}
+		isoMatrix = new FiniteMatrix(matrix.getBaseRing(), isoEls);
+		coKernel = new VectorSpan(cokerVec, domain);
 	}
 
 	public FiniteDimensionalVectorSpaceBasis getDomain() {
 		return domain;
 	}
 
-	public void setDomain(FiniteDimensionalVectorSpaceBasis domain) {
-		this.domain = domain;
-	}
-
 	public FiniteDimensionalVectorSpaceBasis getRange() {
 		return range;
-	}
-
-	public void setRange(FiniteDimensionalVectorSpaceBasis range) {
-		this.range = range;
 	}
 
 	public FiniteMatrix getMatrix() {
 		return matrix;
 	}
 
-	public void setMatrix(FiniteMatrix matrix) {
-		this.matrix = matrix;
-	}
-
-	public FiniteDimensionalVector getImage(FiniteDimensionalVector vec) {
+	public FiniteDimensionalVector getImage(FiniteDimensionalVector vector) {
 
 		FiniteDimensionalVector im = (FiniteDimensionalVector) this.range.getBaseSpace().getNullElement();
-		for (int i = 0; i < this.range.getBaseVectors().length; i++)
-			for (int j = 0; j < this.domain.getBaseVectors().length; j++)
-				im = (FiniteDimensionalVector) im.add(this.range.getBaseVectors()[i]
-						.multiply(this.matrix.getElement(i, j).multiply(this.domain.getCoordinate(j, vec))));
 
-		return vec;
+		RingElement[] els = this.matrix.multiply(this.domain.getCoordinates(vector));
+		for (int i = 0; i < this.range.getBaseVectors().length; i++)
+			im = (FiniteDimensionalVector) im.add(this.range.getBaseVectors()[i].multiply(els[i]));
+
+		return im;
 	}
 
 	public Set getImage(Set set) {
@@ -74,130 +121,51 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 
 	public Set getPreImage(Set image) {
 
-		// normalize bases to semi identity
-//		this.getImage();
-//		this.getKernel();
-//
-//		FiniteDimensionalVector vec = (FiniteDimensionalVector) image;
-//		FiniteDimensionalVector proj = (FiniteDimensionalVector) ((VectorSpan) this.image).getProjection(vec);
-//		if (!vec.equals(proj))
-//			return null;
-//
-//		FiniteDimensionalVector pre = (FiniteDimensionalVector) this.domain.getBaseSpace().getNullElement();
-//		for (int i = 0; i < this.image.getDim(); i++) 
-//			pre = (FiniteDimensionalVector) pre
-//					.add(this.domain.getBaseVectors()[i].multiply(this.range.getCoordinate(i, vec)));
+		FiniteDimensionalVector vector = (FiniteDimensionalVector)image;
+		if (!this.image.isElement(vector))
+			return null;
 
-		return null; //new AffineSubspace(this.domain.getBaseSpace(),pre,this.kernel);
+		FiniteDimensionalVector pre = this.getIsoInverseMap().getImage(vector);
+
+		return new AffineSubspace(this.domain.getBaseSpace(), pre, this.kernel);
 	}
 
 	public Module getKernel() {
 
-		if (this.kernel != null)
-			return this.kernel;
-
-		this.triangulateRows();
-		this.triangulateColumns();
-
-		ArrayList<FiniteDimensionalVector> ims = new ArrayList<FiniteDimensionalVector>();
-
-		for (int i = 0; i < this.domain.getBaseVectors().length; i++) {
-			FiniteDimensionalVector im = this.getImage(this.domain.getBaseVectors()[i]);
-			if (im.equals((FiniteDimensionalVector) this.domain.getBaseSpace().getBaseRing().getNullElement()))
-				ims.add(im);
-		}
-		FiniteDimensionalVector[] basis = new FiniteDimensionalVector[ims.size()];
-		basis = ims.toArray(basis);
-		return new VectorSpan(basis, this.domain);
+		return this.kernel;
 	}
 
 	public Module getImage() {
 
-		if (this.image != null)
-			return this.image;
-
-		this.triangulateRows();
-		this.triangulateColumns();
-
-		ArrayList<FiniteDimensionalVector> ims = new ArrayList<FiniteDimensionalVector>();
-
-		for (int i = 0; i < this.domain.getBaseVectors().length; i++) {
-			FiniteDimensionalVector im = this.getImage(this.domain.getBaseVectors()[i]);
-			if (!im.equals((FiniteDimensionalVector) this.domain.getBaseSpace().getBaseRing().getNullElement()))
-				ims.add(im);
-		}
-		FiniteDimensionalVector[] basis = new FiniteDimensionalVector[ims.size()];
-		basis = ims.toArray(basis);
-		return new VectorSpan(basis, this.range);
+		return this.image;
 	}
 
-	// transform image basis such that matrix has column triangulated form
-	public void triangulateColumns() {
+	public FiniteDimensionalLinearMap getIsoMap() {
 
-		int pos = 0;
-		int size = this.range.getBaseVectors().length;
-		int colPos = 0;
+		if (isoMap == null)
+			isoMap = new FiniteDimensionalLinearMap(this.kernel.getBasis(), this.image.getBasis(), isoMatrix);
 
-		while (colPos < size) {
-
-			// find a remaining Vector with map factor not 0
-			for (int i = pos; i < size; i++) {
-				if (!this.matrix.getElement(colPos, i).equals(this.matrix.baseRing.getNullElement())) {
-					this.range.resortBasis(pos, i);
-					this.matrix.exchangeColumns(pos, i);
-					break;
-				}
-			}
-			if (this.matrix.getElement(colPos, pos).equals(this.matrix.getBaseRing().getNullElement())) {
-				colPos++;
-				continue;
-			}
-
-			RingElement factor = matrix.getElement(colPos, pos).getInverse().getNegative();
-			// adapt the rest of the vectors and matrix rows to to factor 0 at
-			// pos
-			for (int i = pos + 1; i < size; i++) {
-				this.range.modifyVector(i, pos, matrix.getElement(i, pos - 1).multiply(factor));
-				this.matrix.addColumn(i, pos, factor);
-			}
-			this.range.getBaseVectors()[pos] = (FiniteDimensionalVector)this.range.getBaseVectors()[pos].multiply(matrix.getElement(pos, colPos).getInverse());
-			pos++;
-			colPos++;
-		}
+		return isoMap;
 	}
 
-	// transform domain basis such that matrix has row triangulated form
-	public void triangulateRows() {
+	public FiniteDimensionalLinearMap getIsoInverseMap() {
 
-		int pos = 0;
-		int size = this.domain.getBaseVectors().length;
-		int colPos = 0;
+		if (isoInverseMap == null)
+			isoMap = this.getIsoMap().getIsoInverseMap();
 
-		while (colPos < size) {
+		return isoInverseMap;
+	}
 
-			// find a remaining Vector with map factor not 0
-			for (int i = pos; i < size; i++) {
-				if (!this.matrix.getElement(i, colPos).equals(this.matrix.getBaseRing().getNullElement())) {
-					this.domain.resortBasis(i, pos);
-					this.matrix.exchangeRows(i, pos);
-					break;
-				}
-			}
-			if (this.matrix.getElement(pos, colPos).equals(this.matrix.getBaseRing().getNullElement())) {
-				colPos++;
-				continue;
-			}
+	public LinearMap getInverse() {
 
-			RingElement factor = matrix.getElement(pos, colPos).getInverse().getNegative();
-			// adapt the rest of the vectors and matrix rows to to factor 0 at
-			// pos
-			for (int i = pos + 1; i < size; i++) {
-				this.domain.modifyVector(i, pos, matrix.getElement(i, pos - 1).multiply(factor));
-				this.matrix.addRow(i, pos, factor);
-			}
-			this.domain.getBaseVectors()[pos] = (FiniteDimensionalVector)this.domain.getBaseVectors()[pos].multiply(matrix.getElement(pos, colPos).getInverse());
-			pos++;
-			colPos++;
-		}
+		if (matrix.getInverse() == null)
+			return null;
+
+		if (inverseMap == null)
+			inverseMap = new FiniteDimensionalLinearMap(this.range, this.domain,
+					(FiniteMatrix) this.getMatrix().getInverse());
+
+		return this.inverseMap;
+
 	}
 }
