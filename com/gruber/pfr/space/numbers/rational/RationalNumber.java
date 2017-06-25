@@ -18,6 +18,11 @@ public class RationalNumber extends RingElement {
 		return base;
 	}
 
+	public Object clone() {
+		
+		return new RationalNumber(this.base);
+	}
+	
 	public boolean isElement(Set set) {
 		return false;
 	}

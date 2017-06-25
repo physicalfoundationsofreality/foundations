@@ -2,12 +2,17 @@ package com.gruber.pfr.space.rings;
 
 import com.gruber.pfr.space.base.Set;
 
-public abstract class RingElement implements Set {
+public class RingElement implements Set, Cloneable {
 
 	Ring ring;
 
 	public RingElement(Ring ring) {
 		this.ring = ring;
+	}
+	
+	public Object clone() {
+
+		return new RingElement(this.ring);
 	}
 
 	public Ring getRing() {

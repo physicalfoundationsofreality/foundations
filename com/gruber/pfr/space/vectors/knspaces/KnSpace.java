@@ -1,6 +1,7 @@
 package com.gruber.pfr.space.vectors.knspaces;
 
 import com.gruber.pfr.space.base.AutoOperation;
+import com.gruber.pfr.space.base.Operation.OperantException;
 import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.modules.InnerProduct;
 import com.gruber.pfr.space.modules.InnerProductSpace;
@@ -26,6 +27,11 @@ public class KnSpace extends FiniteDimensionalVectorSpace implements InnerProduc
 		this.innerProduct.setBase(this);
 	}
 
+	public KnVector newVector(RingElement[] elements) throws InvalidElementsException {
+		
+		return new KnVector(this,elements);
+	}
+	
 	public Set getNullElement() {
 
 		try {
@@ -36,7 +42,7 @@ public class KnSpace extends FiniteDimensionalVectorSpace implements InnerProduc
 			for (int i = 0; i < elements.length; i++)
 				elements[i] = (RingElement) this.getBaseRing().getNullElement();
 
-			return new KnVector(this, elements);
+			return this.newVector(elements);
 		} catch (Exception e) {
 			return null;
 		}
@@ -52,7 +58,7 @@ public class KnSpace extends FiniteDimensionalVectorSpace implements InnerProduc
 				els[i] = (RingElement) this.baseRing.getNullElement();
 		}
 		try {
-			return new KnVector(this,els);
+			return this.newVector(els);
 		} catch (InvalidElementsException e) {
 			e.printStackTrace();
 			return null;
@@ -78,7 +84,7 @@ public class KnSpace extends FiniteDimensionalVectorSpace implements InnerProduc
 				elements[i] = (RingElement) this.getBaseRing().getRandomElement();
 			}
 
-			return new KnVector(this, elements);
+			return this.newVector(elements);
 		} catch (Exception e) {
 			return null;
 		}
@@ -91,7 +97,12 @@ public class KnSpace extends FiniteDimensionalVectorSpace implements InnerProduc
 
 	public RingElement innerProduct(ModuleElement vec1, ModuleElement vec2) {
 
-		return (RingElement) this.innerProduct.operate(vec1, vec2);
+		try {
+			return (RingElement) this.innerProduct.operate(vec1, vec2);
+		} catch (OperantException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	public KnStandardBasis getStandardBasis() {
 		

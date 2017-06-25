@@ -33,24 +33,6 @@ public abstract class RealBasedCurves implements Visualization {
 	public void setStartingPoints(RealBasedVector[] startingPoints) {
 		this.startingPoints = startingPoints;
 	}
-	
-//	public List<List<SimpleVector>> getCurves() {
-//		
-//		List<List<RealBasedVector>> realCurves = this.getRealCurves();
-//		List<List<SimpleVector>> curves = new ArrayList<List<SimpleVector>>();
-//		
-//		Iterator<List<RealBasedVector>> curvesIter = realCurves.iterator();
-//		while(curvesIter.hasNext()) {
-//			ArrayList<SimpleVector> curve = new ArrayList<SimpleVector>();
-//			
-//			Iterator<RealBasedVector> curveIter = curvesIter.next().iterator();
-//			while(curveIter.hasNext()) 
-//				curve.add(curveIter.next().asVector());
-//			
-//			curves.add(curve);
-//		}
-//		return curves;
-//	}
 
 	public List<List<RealBasedVector>> getRealCurves() {
 

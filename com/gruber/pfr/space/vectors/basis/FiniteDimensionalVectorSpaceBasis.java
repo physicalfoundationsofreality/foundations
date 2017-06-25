@@ -17,21 +17,21 @@ public abstract class FiniteDimensionalVectorSpaceBasis implements VectorSpaceBa
 
 	public FiniteDimensionalVectorSpaceBasis(FiniteDimensionalVectorSpace space,
 			FiniteDimensionalVector[] baseVectors) {
-		// super(space);
 
+		this.space = space;
 		this.baseVectors = baseVectors;
 	}
 
 	public FiniteDimensionalVector[] getBaseVectors() {
 		return baseVectors;
 	}
-	
+
 	public RingElement[] getCoordinates(Vector vector) {
-		
+
 		RingElement[] els = new RingElement[baseVectors.length];
-		for(int i = 0; i < els.length; i++) 
+		for (int i = 0; i < els.length; i++)
 			els[i] = this.getCoordinate(i, vector);
-			
+
 		return els;
 	}
 

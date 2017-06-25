@@ -14,6 +14,11 @@ public class IntegerNumber extends RingElement {
 		
 		this.base = base;
 	}
+	
+	public Object clone() {
+		
+		return new IntegerNumber(this.base);
+	}
 
 	public int getBase() {
 		return base;

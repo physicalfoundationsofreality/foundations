@@ -73,7 +73,7 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 		 */
 		FiniteDimensionalVector[] cokerVec = new FiniteDimensionalVector[matrix.getRank()];
 		FiniteMatrix isoFull = (FiniteMatrix) matrix.getRowsNormalizer().multiply(matrix)
-				.multiply(matrix.getColumnsDiaginalNormalizedForm());
+				.multiply(matrix.getColumnsNormalizer());
 
 		RingElement[][] isoEls = new RingElement[matrix.getRank()][matrix.getRank()];
 

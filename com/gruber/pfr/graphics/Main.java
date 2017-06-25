@@ -32,8 +32,8 @@ public class Main {
 		JFrame f = new JFrame("Graph Wizard");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		GraphWizard ap = new GraphWizard(phaseSpaceTest(), new Dimension(1000, 1000),
-				FunctionType.LINE_STRAIGHT_TANGENT);
+		GraphWizard ap = new GraphWizard(phaseSpaceProjectionTest(), new Dimension(1000, 1000),
+				FunctionType.SINGLE_POINT);
 
 		ap.init();
 		ap.start();
@@ -97,15 +97,15 @@ public class Main {
 
 		try {
 			start[0] = new RealVector(new RealNumber[] { new RealNumber(10) });
-			vel[0] = new RealVector(new RealNumber[] { new RealNumber(-1) });
+			vel[0] = new RealVector(new RealNumber[] { new RealNumber(1) });
 //			start[1] = new RealVector(new RealNumber[] { new RealNumber(2) });
 //			vel[1] = new RealVector(new RealNumber[] { new RealNumber(0) });
 //			
 //			start[2] = new RealVector(new RealNumber[] { new RealNumber(4) });
 //			vel[2] = new RealVector(new RealNumber[] { new RealNumber(0) });
 			
-			return new RealBasedCurves2D(new PhaseSpaceCurvesApproximation(start, vel, 30, 10, 1,
-					new CentralForceField(1, 1, new Double(-2).floatValue())));
+			return new RealBasedCurves2D(new PhaseSpaceCurvesApproximation(start, vel, 50, 10, 1,
+					new CentralForceField(1, -1, new Double(0).floatValue())));
 
 
 		} catch (Exception e) {
@@ -115,17 +115,18 @@ public class Main {
 	}
 	public static Visualization2D phaseSpaceProjectionTest() {
 
-		RealVector[] start = new RealVector[1];
-		RealVector[] vel = new RealVector[1];
+		RealVector[] start = new RealVector[3];
+		RealVector[] vel = new RealVector[3];
 
 		try {
-			start[0] = new RealVector(new RealNumber[] { new RealNumber(10), new RealNumber(5) });
-			vel[0] = new RealVector(new RealNumber[] { new RealNumber(-1), new RealNumber(-2) });
-//			start[1] = new RealVector(new RealNumber[] { new RealNumber(2) });
-//			vel[1] = new RealVector(new RealNumber[] { new RealNumber(0) });
-//			
-//			start[2] = new RealVector(new RealNumber[] { new RealNumber(4) });
-//			vel[2] = new RealVector(new RealNumber[] { new RealNumber(0) });
+			start[0] = new RealVector(new RealNumber[] { new RealNumber(10), new RealNumber(0) });
+			vel[0] = new RealVector(new RealNumber[] { new RealNumber(0), new RealNumber(3) });
+			
+			start[1] = new RealVector(new RealNumber[] { new RealNumber(9), new RealNumber(0) });
+			vel[1] = new RealVector(new RealNumber[] { new RealNumber(0), new RealNumber(-3) });
+			
+			start[2] = new RealVector(new RealNumber[] { new RealNumber(8), new RealNumber(0) });
+			vel[2] = new RealVector(new RealNumber[] { new RealNumber(0), new RealNumber(-2) });
 			
 			//projection onto space coordinates
 			RealNumber[][] proj1 = { { new RealNumber(1), new RealNumber(0), new RealNumber(0), new RealNumber(0) },
@@ -149,9 +150,8 @@ public class Main {
 			
 			FiniteMatrix projection = new FiniteMatrix(RealNumbers.getInstance(), proj1);
 			
-			return new RealBasedCurves2DProjection(new PhaseSpaceCurvesApproximation(start, vel, 30, 10, 1,
-					new CentralForceField(1, 1, new Double(-2).floatValue())), projection);
-
+			return new RealBasedCurves2DProjection(new PhaseSpaceCurvesApproximation(start, vel, 2000, 10, 2,
+					new CentralForceField(2, -50, new Double(-2).floatValue())), projection);
 
 		} catch (Exception e) {
 			e.printStackTrace();

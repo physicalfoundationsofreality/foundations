@@ -1,5 +1,7 @@
 package com.gruber.pfr.space.vectors.linearmaps;
 
+import java.util.Arrays;
+
 import com.gruber.pfr.space.rings.Ring;
 import com.gruber.pfr.space.rings.RingElement;
 
@@ -76,19 +78,35 @@ public class FiniteMatrix implements Matrix {
 
 		return this.colNormForm;
 	}
+	
+	public static RingElement[][] copyOf(RingElement[][] matrix) {
+		
+		if(matrix.length == 0)
+			return new RingElement[0][0];
+		
+		RingElement[][] ret = new RingElement[matrix.length][matrix[0].length];
+		
+		for (int i = 0; i < matrix.length; i++)
+			for (int j = 0; j < matrix[0].length; j++)
+				ret[i][j] = (RingElement)matrix[i][j].clone();
+		
+		return ret;
+	}
 
 	protected void diagonolize() {
 
 		int dimCol = this.getColumnNumber();
 		int dimRow = this.getRownNumber();
+//		int dimMatrix = Math.min(dimCol, dimRow);
+		
 		int colPos = 0;
 		int rowPos = 0;
 
 		RingElement nullEl = (RingElement) this.baseRing.getNullElement();
 		RingElement oneEl = (RingElement) this.baseRing.getOneElement();
 
-		RingElement[][] colNormalForm = matrix.clone();
-		RingElement[][] rowNormalForm = matrix.clone();
+		RingElement[][] colNormalForm = copyOf(matrix);
+		RingElement[][] rowNormalForm = copyOf(matrix);
 		RingElement[][] colNormal = new RingElement[dimCol][dimCol];
 		RingElement[][] rowNormal = new RingElement[dimRow][dimRow];
 
@@ -109,24 +127,24 @@ public class FiniteMatrix implements Matrix {
 		this.colNormalizer = new FiniteMatrix(baseRing, colNormal);
 		this.rowNormalizer = new FiniteMatrix(baseRing, rowNormal);
 		this.colNormForm = new FiniteMatrix(baseRing, colNormalForm);
-		this.rowNormalizer = new FiniteMatrix(baseRing, rowNormalForm);
+		this.rowNormForm = new FiniteMatrix(baseRing, rowNormalForm);
 
-		while (rowPos < dimRow) {
+		while (colPos < dimCol && rowPos < dimRow) {
 
 			// find a remaining Vector with map factor not 0
 			for (int i = rowPos; i < dimRow; i++) {
-				if (!this.rowNormForm.getElement(colPos, i).equals(nullEl)) {
+				if (!this.rowNormForm.getElement(i,colPos).equals(nullEl)) {
 					this.rowNormalizer.exchangeRows(rowPos, i);
 					this.rowNormForm.exchangeRows(rowPos, i);
 					break;
 				}
 			}
-			if (this.rowNormForm.getElement(colPos, rowPos).equals(nullEl)) {
+			if (this.rowNormForm.getElement(rowPos, colPos).equals(nullEl)) {
 				colPos++;
 				continue;
 			}
 
-			RingElement factor = rowNormForm.getElement(colPos, rowPos).getInverse();
+			RingElement factor = rowNormForm.getElement(rowPos, colPos).getInverse();
 			this.rowNormForm.scaleRow(rowPos, factor);
 			this.rowNormalizer.scaleRow(rowPos, factor);
 
@@ -136,7 +154,7 @@ public class FiniteMatrix implements Matrix {
 			// rowPpos
 			for (int i = 0; i < dimRow; i++) {
 				if (i != rowPos) {
-					RingElement multiplier = rowNormForm.getElement(colPos, i).getNegative();
+					RingElement multiplier = rowNormForm.getElement(i, colPos).getNegative();
 					this.rowNormForm.addRow(i, rowPos, multiplier);
 					this.rowNormalizer.addRow(i, rowPos, multiplier);
 				}
@@ -146,22 +164,25 @@ public class FiniteMatrix implements Matrix {
 			colPos++;
 		}
 
-		while (colPos < dimCol) {
+		colPos = 0;
+		rowPos = 0;
+		
+		while (colPos < dimCol && rowPos < dimRow) {
 
 			// find a remaining Vector with map factor not 0
 			for (int i = colPos; i < dimCol; i++) {
-				if (!this.colNormForm.getElement(i, rowPos).equals(nullEl)) {
+				if (!this.colNormForm.getElement(rowPos, i).equals(nullEl)) {
 					this.colNormalizer.exchangeColumns(i, colPos);
 					this.colNormForm.exchangeColumns(i, colPos);
 					break;
 				}
 			}
-			if (this.colNormForm.getElement(colPos, rowPos).equals(nullEl)) {
+			if (this.colNormForm.getElement(rowPos, colPos).equals(nullEl)) {
 				rowPos++;
 				continue;
 			}
 
-			RingElement factor = colNormForm.getElement(colPos, rowPos).getInverse();
+			RingElement factor = colNormForm.getElement(rowPos, colPos).getInverse();
 			this.colNormForm.scaleColumn(colPos, factor);
 			this.colNormalizer.scaleColumn(colPos, factor);
 
@@ -169,9 +190,9 @@ public class FiniteMatrix implements Matrix {
 			// rowPpos
 			for (int i = 0; i < dimCol; i++) {
 				if (i != colPos) {
-					RingElement multiplier = colNormForm.getElement(i, rowPos).getNegative();
-					this.colNormForm.addRow(i, colPos, multiplier);
-					this.colNormalizer.addRow(i, colPos, multiplier);
+					RingElement multiplier = colNormForm.getElement(rowPos, i).getNegative();
+					this.colNormForm.addColumn(i, colPos, multiplier);
+					this.colNormalizer.addColumn(i, colPos, multiplier);
 				}
 			}
 
@@ -247,13 +268,13 @@ public class FiniteMatrix implements Matrix {
 	public void addRow(int row, int addedRow, RingElement scalar) {
 
 		for (int k = 0; k < matrix[row].length; k++)
-			matrix[row][k] = scalar.multiply(matrix[addedRow][k]);
+			matrix[row][k] = matrix[row][k].add(scalar.multiply(matrix[addedRow][k]));
 	}
 
 	public void addColumn(int col, int addedCol, RingElement scalar) {
 
 		for (int k = 0; k < matrix.length; k++)
-			matrix[k][col] = scalar.multiply(matrix[k][addedCol]);
+			matrix[k][col] = matrix[k][col].add(scalar.multiply(matrix[k][addedCol]));
 	}
 
 	public RingElement getElement(int i, int j) {

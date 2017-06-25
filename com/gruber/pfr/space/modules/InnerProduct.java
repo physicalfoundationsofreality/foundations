@@ -30,8 +30,8 @@ public abstract class InnerProduct implements Operation {
 
 		return base.getBaseRing();
 	}
-	public RingElement operate(ModuleElement vec1, ModuleElement vec2) {
+	public RingElement operate(ModuleElement vec1, ModuleElement vec2) throws OperantException {
 		
-		return (RingElement)this.operate(vec1, vec2);
+		return (RingElement)this.operate((Set)vec1,(Set) vec2);
 	}
 }

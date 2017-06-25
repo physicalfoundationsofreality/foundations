@@ -20,6 +20,11 @@ public class ComplexNumber extends RingElement {
 		return new Double(re).floatValue();
 	}
 
+	public Object clone() {
+		
+		return new ComplexNumber(new Double(this.re).floatValue(),new Double(this.im).floatValue());
+	}
+	
 	public double getImaginaryPart() {
 		return new Double(im).floatValue();
 	}

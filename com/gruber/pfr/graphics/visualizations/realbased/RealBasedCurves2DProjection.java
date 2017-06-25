@@ -22,8 +22,9 @@ public class RealBasedCurves2DProjection implements Visualization2D {
 
 	public RealBasedCurves2DProjection(RealBasedCurves curves, FiniteMatrix projectionMatrix) {
 		this.curves = curves;
-		this.projection = new FiniteDimensionalLinearMap(RnSpace.getInstance(2).getStandardBasis(),
-				RnSpace.getInstance(projectionMatrix.getRownNumber()).getStandardBasis(), projectionMatrix);
+		this.projection = new FiniteDimensionalLinearMap(
+				RnSpace.getInstance(projectionMatrix.getColumnNumber()).getStandardBasis(),
+				RnSpace.getInstance(2).getStandardBasis(), projectionMatrix);
 	}
 
 	public List<List<SimpleVector>> getCurves() {
@@ -38,8 +39,16 @@ public class RealBasedCurves2DProjection implements Visualization2D {
 			Iterator<RealBasedVector> curveIter = curvesIter.next().iterator();
 			while (curveIter.hasNext()) {
 				RealBasedVector vector = curveIter.next();
-				vector.setDirection((RealVector)projection.getImage(vector.getDirection()));
-				vector.setOrigin((RealVector)projection.getImage(vector.getOrigin()));
+				System.out.println("Origin: "+vector.getOrigin().getElements()[0].getBase()
+						+" "+vector.getOrigin().getElements()[1].getBase()
+								+" "+vector.getOrigin().getElements()[2].getBase()
+										+" "+vector.getOrigin().getElements()[3].getBase()
+								+" Direction: "+vector.getDirection().getElements()[0].getBase()
+										+" "+vector.getDirection().getElements()[1].getBase()
+												+" "+vector.getDirection().getElements()[2].getBase()
+														+" "+vector.getDirection().getElements()[3].getBase());
+				vector.setDirection((RealVector) projection.getImage(vector.getDirection()));
+				vector.setOrigin((RealVector) projection.getImage(vector.getOrigin()));
 				curve.add(vector.asVector());
 			}
 
