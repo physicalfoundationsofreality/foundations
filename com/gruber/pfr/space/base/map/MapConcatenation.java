@@ -17,20 +17,20 @@ public class MapConcatenation implements Map {
 
 	public static Map concatenateMaps(Map map1, Map map2) throws MapIncompatibilityException {
 		
-		if(!map1.getRange().equals(map2.getDomain()))
+		if(!map1.getRangeBasis().equals(map2.getDomainBasis()))
 				throw new MapIncompatibilityException();
 		
 		return new MapConcatenation(map1, map2);
 	}
 
-	public Set getDomain() {
+	public Set getDomainBasis() {
 		
-		return map1.getDomain();
+		return map1.getDomainBasis();
 	}
 
-	public Set getRange() {
+	public Set getRangeBasis() {
 		
-		return map2.getRange();
+		return map2.getRangeBasis();
 	}
 
 	public Set getImage(Set orig) {

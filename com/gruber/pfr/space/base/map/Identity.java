@@ -10,11 +10,11 @@ public class Identity implements Map {
 		this.set = set;
 	}
 
-	public Set getDomain() {
+	public Set getDomainBasis() {
 		return set;
 	}
 
-	public Set getRange() {
+	public Set getRangeBasis() {
 		return set;
 	}
 

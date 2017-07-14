@@ -1,40 +1,42 @@
-package com.gruber.pfr.graphics.visualizations.realbased;
+package com.gruber.pfr.graphics.visualizations;
 
 import java.util.List;
 
+import com.gruber.pfr.graphics.SimpleCurve;
+import com.gruber.pfr.graphics.Visualization;
 import com.gruber.pfr.graphics.elements.Coordinates;
+import com.gruber.pfr.graphics.elements.SimpleVector;
 
-public abstract class RealBasedCurves implements RealBasedVisualization {
+public abstract class SimpleCurves implements Visualization {
 
 	Coordinates coord = null;
 	int gran;
 	int length;
-	List<RealBasedCurve> curves;
+	List<SimpleCurve> curves;
 
-	protected RealBasedCurves(List<RealBasedCurve> curves, int length, int granularity, int dimension) {
+	protected SimpleCurves(List<SimpleCurve> curves, int length, int granularity, int dimension) {
 
 		this.coord = new Coordinates(new int[dimension], new int[dimension]);
 		this.gran = granularity;
-		this.curves = curves;
 		this.length = length;
-		
-//		this.calculateCurves();
-	}
-
-	public abstract RealBasedVector getNextCurveValue(RealBasedVector current);
-	
-	public void setCurves(List<RealBasedCurve> curves) {
 		this.curves = curves;
+
 //		this.calculateCurves();
 	}
 
+	public void setCurves(List<SimpleCurve> curves) {
+		this.curves = curves;
+		this.calculateCurves();
+	}
 
-	public List<RealBasedCurve> getCurves() {
+	public List<SimpleCurve> getCurves() {
 		return this.curves;
 	}
 
+	public abstract SimpleVector getNextCurveValue(SimpleVector current);
+
 	protected void calculateCurves() {
-		
+
 		if (gran == 0 || curves == null || curves.size() == 0)
 			return;
 		else {
@@ -57,10 +59,10 @@ public abstract class RealBasedCurves implements RealBasedVisualization {
 						coord.setMax(curves.get(i).getStartingPoint().getMaxInt()[j], j);
 				}
 
-//				curves.get(i).refreshCurve();
+//				this.curves.get(i).refreshCurve();
 
-				RealBasedVector current = curves.get(i).getStartingPoint();
-				curves.get(i).add(current);
+				SimpleVector current = curves.get(i).getStartingPoint();
+				this.curves.get(i).add(current);
 
 				for (float r = 0; r < length; r += inc) {
 
@@ -74,8 +76,7 @@ public abstract class RealBasedCurves implements RealBasedVisualization {
 						if (current.getMaxInt()[j] > coord.getMax(j))
 							coord.setMax(current.getMaxInt()[j], j);
 					}
-
-					curves.get(i).add(current);
+					this.curves.get(i).add(current);
 				}
 			}
 		}

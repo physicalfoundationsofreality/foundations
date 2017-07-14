@@ -2,19 +2,19 @@ package com.gruber.pfr.graphics.visualizations;
 
 import java.util.List;
 
+import com.gruber.pfr.graphics.SimpleCurve;
 import com.gruber.pfr.graphics.Visualization2D;
 import com.gruber.pfr.graphics.elements.Coordinates;
 import com.gruber.pfr.graphics.elements.Coordinates2D;
-import com.gruber.pfr.graphics.elements.SimpleVector;
 
-public class Curves2D implements Visualization2D {
+public class SimpleCurves2D implements Visualization2D {
 
-	Curves curves;
-	public Curves2D(Curves curves) {
+	SimpleCurves curves;
+	public SimpleCurves2D(SimpleCurves curves) {
 		this.curves = curves;
 	}
 
-	public List<List<SimpleVector>> getCurves() {
+	public List<SimpleCurve> getCurves() {
 		
 		return this.curves.getCurves();
 	}

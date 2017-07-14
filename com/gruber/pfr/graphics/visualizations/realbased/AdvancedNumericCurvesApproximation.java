@@ -1,6 +1,7 @@
 package com.gruber.pfr.graphics.visualizations.realbased;
 
-import com.gruber.pfr.graphics.elements.RealBasedVector;
+import java.util.List;
+
 import com.gruber.pfr.space.numbers.real.RealNumber;
 import com.gruber.pfr.space.numbers.real.RealVector;
 
@@ -9,11 +10,12 @@ public class AdvancedNumericCurvesApproximation extends RealBasedCurves {
 	RealBasedVectorField field;
 	RealNumber increment;
 
-	public AdvancedNumericCurvesApproximation(RealBasedVector[] startingPoints, int length, int granularity,
+	public AdvancedNumericCurvesApproximation(List<RealBasedCurve> curves, int length, int granularity,
 			int dimension, RealBasedVectorField field) {
-		super(startingPoints, length, granularity, dimension);
+		super(curves, length, granularity, dimension);
 		this.field = field;
 		this.increment = new RealNumber(1 / (new Float(granularity).floatValue()));
+		this.calculateCurves();
 	}
 	
 

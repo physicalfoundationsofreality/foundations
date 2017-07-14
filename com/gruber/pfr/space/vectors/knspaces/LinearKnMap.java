@@ -27,7 +27,7 @@ public abstract class LinearKnMap extends LinearMap {
 		KnVector vec1 = (KnVector)orig;
 		RingElement[] els1 = vec1.getElements();
 		
-		KnSpace range = (KnSpace)this.getRange();
+		KnSpace range = (KnSpace)this.getRangeBasis();
 		KnVector vec2 = (KnVector)range.getNullElement();
 		RingElement[] els2 = vec2.getElements();
 		

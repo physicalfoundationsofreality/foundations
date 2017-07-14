@@ -11,7 +11,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JApplet;
@@ -75,11 +74,12 @@ public class GraphWizard extends JApplet {
 			origComposite = g2.getComposite();
 
 			// draw the functions
-			Iterator<List<SimpleVector>> paths = this.settings.vis.getCurves().iterator();
+			Iterator<SimpleCurve> paths = this.settings.vis.getCurves().iterator();
 
 			while (paths.hasNext()) {
 
-				Iterator<SimpleVector> points = paths.next().iterator();
+				SimpleCurve curve = paths.next();
+				Iterator<SimpleVector> points = curve.getVectors().iterator();
 				SimpleVector vec = points.next(); // the first point
 
 				if (vec != null) {
@@ -121,10 +121,10 @@ public class GraphWizard extends JApplet {
 					float posX = (vec.getOrigin().getCoordinates()[0] - offX) * expX;
 					float posY = (offY - vec.getOrigin().getCoordinates()[1]) * expY;
 					path.moveTo(posX, posY);
-					g2.setColor(Color.BLACK);
+					g2.setColor(curve.getOriginColor());
 					g2.draw(new Ellipse2D.Float(posX - 1, posY - 1, 2, 2));
 
-					g2.setColor(Color.BLUE);
+					g2.setColor(curve.getDirectionColor());
 					if (vec.getDirection() != null
 							&& ( this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT)
 									|| this.settings.type.equals(FunctionType.LINE_STRAIGHT_TANGENT))) {
@@ -142,7 +142,7 @@ public class GraphWizard extends JApplet {
 						if (this.settings.type.equals(FunctionType.SINGLE_POINT) || this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT))
 							path.moveTo(posX, posY);
 
-						g2.setColor(Color.BLACK);
+						g2.setColor(curve.getOriginColor());
 						g2.draw(new Ellipse2D.Float(posX - 1, posY - 1, 2, 2));
 //						g2.drawString(new Float(vec.getOrigin().getCoordinates()[0]).toString() + '-' + new Float(vec.getOrigin().getCoordinates()[1]).toString(), posX, posY);
 						path.lineTo(posX, posY);
@@ -152,11 +152,11 @@ public class GraphWizard extends JApplet {
 										|| this.settings.type.equals(FunctionType.LINE_STRAIGHT_TANGENT) )) {
 							float vecX = posX + vec.getDirection().getCoordinates()[0] * expX;
 							float vecY = posY - vec.getDirection().getCoordinates()[1] * expY;
-							g2.setColor(Color.BLUE);
+							g2.setColor(curve.getDirectionColor());
 							g2.draw(new Line2D.Float(posX, posY, vecX, vecY));
 						}
 					}
-					g2.setColor(Color.BLACK);
+					g2.setColor(curve.getOriginColor());
 					g2.draw(path);
 				}
 			}

@@ -11,12 +11,12 @@ public abstract class QuotientProjection implements Map {
 		this.quotient = quotient;
 	}
 
-	public Set getDomain() {
+	public Set getDomainBasis() {
 		
 		return quotient.getRelat().getBase();
 	}
 
-	public Set getRange() {
+	public Set getRangeBasis() {
 		
 		return quotient;
 	}

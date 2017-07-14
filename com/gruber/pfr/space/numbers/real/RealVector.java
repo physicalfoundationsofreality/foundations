@@ -35,4 +35,7 @@ public class RealVector extends KnVector {
 
 		return this.getSpace().innerProduct(vector, vector);
 	}
+	public RealVector getNegative() {
+		return this.multiply(((RealNumber)RealNumbers.getInstance().getOneElement()).getNegative());
+	}
 }

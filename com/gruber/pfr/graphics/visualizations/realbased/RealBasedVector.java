@@ -1,6 +1,10 @@
-package com.gruber.pfr.graphics.elements;
+package com.gruber.pfr.graphics.visualizations.realbased;
 
+import com.gruber.pfr.graphics.elements.SimplePoint;
+import com.gruber.pfr.graphics.elements.SimpleVector;
+import com.gruber.pfr.space.numbers.real.RealNumber;
 import com.gruber.pfr.space.numbers.real.RealVector;
+import com.gruber.pfr.space.vectors.knspaces.KnVector.InvalidElementsException;
 
 public class RealBasedVector {
 
@@ -9,6 +13,15 @@ public class RealBasedVector {
 
 	public RealBasedVector(RealVector origin) {
 		this.origin = origin;
+		
+		RealNumber[] els = new RealNumber[origin.getElements().length];
+		for(int i = 0; i < els.length; i++)
+			els[i] = new RealNumber(0);
+		try {
+			this.direction = new RealVector(els);
+		} catch (InvalidElementsException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public RealVector getDirection() {

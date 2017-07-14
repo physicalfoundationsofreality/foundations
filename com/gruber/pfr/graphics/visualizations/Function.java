@@ -1,8 +1,10 @@
 package com.gruber.pfr.graphics.visualizations;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gruber.pfr.graphics.SimpleCurve;
 import com.gruber.pfr.graphics.Visualization2D;
 import com.gruber.pfr.graphics.elements.Coordinates2D;
 import com.gruber.pfr.graphics.elements.SimplePoint;
@@ -21,14 +23,14 @@ public abstract class Function implements Visualization2D {
 
 	public abstract float getFunctionValue(float x);
 
-	public List<List<SimpleVector>> getCurves() {
+	public List<SimpleCurve> getCurves() {
 
 		if (gran == 0)
 			return null;
 		else {
 
-			ArrayList<List<SimpleVector>> paths = new ArrayList<List<SimpleVector>>(1);
-			ArrayList<SimpleVector> path = new ArrayList<SimpleVector>();
+			ArrayList<SimpleCurve> paths = new ArrayList<SimpleCurve>(1);
+			SimpleCurve path = new SimpleCurve(Color.BLACK, Color.BLUE, null);
 
 			float inc = 1 / new Float(gran).floatValue();
 			

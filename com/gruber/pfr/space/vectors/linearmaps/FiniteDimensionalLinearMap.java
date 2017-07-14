@@ -14,8 +14,8 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 	// -> phi(sum(bj * ej)) = phi(bj * sum(mij * fi ))
 	// -> phi(b) has coordinates bi = sum( mij bj )
 	FiniteMatrix matrix;
-	FiniteDimensionalVectorSpaceBasis domain;
-	FiniteDimensionalVectorSpaceBasis range;
+	FiniteDimensionalVectorSpaceBasis domainBasis;
+	FiniteDimensionalVectorSpaceBasis rangeBasis;
 	VectorSpan kernel;
 	VectorSpan image;
 	VectorSpan coKernel; // there is no unique cokernel, we just choose one
@@ -31,8 +31,8 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 		super(domain.getBaseSpace(), range.getBaseSpace());
 
 		this.matrix = matrix;
-		this.range = range;
-		this.domain = domain;
+		this.rangeBasis = range;
+		this.domainBasis = domain;
 
 		// get kernel: if M*B = CN and e in Kernel CN -> B*e in Kernel M
 		int dimKer = matrix.getColumnNumber() - matrix.getRank();
@@ -91,12 +91,12 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 		coKernel = new VectorSpan(cokerVec, domain);
 	}
 
-	public FiniteDimensionalVectorSpaceBasis getDomain() {
-		return domain;
+	public FiniteDimensionalVectorSpaceBasis getDomainBasis() {
+		return domainBasis;
 	}
 
-	public FiniteDimensionalVectorSpaceBasis getRange() {
-		return range;
+	public FiniteDimensionalVectorSpaceBasis getRangeBasis() {
+		return rangeBasis;
 	}
 
 	public FiniteMatrix getMatrix() {
@@ -105,11 +105,11 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 
 	public FiniteDimensionalVector getImage(FiniteDimensionalVector vector) {
 
-		FiniteDimensionalVector im = (FiniteDimensionalVector) this.range.getBaseSpace().getNullElement();
+		FiniteDimensionalVector im = (FiniteDimensionalVector) this.rangeBasis.getBaseSpace().getNullElement();
 
-		RingElement[] els = this.matrix.multiply(this.domain.getCoordinates(vector));
-		for (int i = 0; i < this.range.getBaseVectors().length; i++)
-			im = (FiniteDimensionalVector) im.add(this.range.getBaseVectors()[i].multiply(els[i]));
+		RingElement[] els = this.matrix.multiply(this.domainBasis.getCoordinates(vector));
+		for (int i = 0; i < this.rangeBasis.getBaseVectors().length; i++)
+			im = (FiniteDimensionalVector) im.add(this.rangeBasis.getBaseVectors()[i].multiply(els[i]));
 
 		return im;
 	}
@@ -127,7 +127,7 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 
 		FiniteDimensionalVector pre = this.getIsoInverseMap().getImage(vector);
 
-		return new AffineSubspace(this.domain.getBaseSpace(), pre, this.kernel);
+		return new AffineSubspace(this.domainBasis.getBaseSpace(), pre, this.kernel);
 	}
 
 	public Module getKernel() {
@@ -162,7 +162,7 @@ public class FiniteDimensionalLinearMap extends LinearMap {
 			return null;
 
 		if (inverseMap == null)
-			inverseMap = new FiniteDimensionalLinearMap(this.range, this.domain,
+			inverseMap = new FiniteDimensionalLinearMap(this.rangeBasis, this.domainBasis,
 					(FiniteMatrix) this.getMatrix().getInverse());
 
 		return this.inverseMap;

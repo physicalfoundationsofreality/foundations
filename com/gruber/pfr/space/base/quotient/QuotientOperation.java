@@ -11,7 +11,7 @@ public class QuotientOperation extends AutoOperation {
 
 	public QuotientOperation(QuotientProjection projection, Operation baseOperation) {
 		
-		this.setBase(projection.getDomain());
+		this.setBase(projection.getDomainBasis());
 		this.baseOperation = baseOperation;
 		this.projection = projection;
 	}

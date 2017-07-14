@@ -15,12 +15,12 @@ public abstract class LinearMap implements Map {
 		this.range = range;
 	}
 
-	public Set getDomain() {
+	public Set getDomainBasis() {
 
 		return this.domain;
 	}
 
-	public Set getRange() {
+	public Set getRangeBasis() {
 
 		return this.range;
 	}

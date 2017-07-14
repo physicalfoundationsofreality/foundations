@@ -1,7 +1,6 @@
 package com.gruber.pfr.space.numbers.real;
 
 import com.gruber.pfr.space.base.Set;
-import com.gruber.pfr.space.numbers.integer.IntegerNumber;
 import com.gruber.pfr.space.rings.RingElement;
 
 public class RealNumber extends RingElement {

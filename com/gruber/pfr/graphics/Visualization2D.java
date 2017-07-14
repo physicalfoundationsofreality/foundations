@@ -7,7 +7,7 @@ import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public interface Visualization2D {
 
-	public List<List<SimpleVector>> getCurves();
+	public List<SimpleCurve> getCurves();
 	
 	public Coordinates2D getCoordinates();
 	

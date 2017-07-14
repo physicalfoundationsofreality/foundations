@@ -1,16 +1,24 @@
 package com.gruber.pfr.graphics.visualizations;
 
+import java.util.List;
+
+import com.gruber.pfr.graphics.SimpleCurve;
 import com.gruber.pfr.graphics.elements.SimplePoint;
 import com.gruber.pfr.graphics.elements.SimpleVector;
 
-public class SimpleNumericCurvesApproximation extends Curves {
+public class SimpleNumericCurvesApproximation extends SimpleCurves {
 
 	VectorField field;
 
-	public SimpleNumericCurvesApproximation(SimpleVector[] startingPoints, int length, int granularity, int dimension,
+	public SimpleNumericCurvesApproximation(List<SimpleCurve> curves, int length, int granularity, int dimension,
 			VectorField field) {
-		super(startingPoints, length, granularity, dimension);
+		super(curves, length, granularity, dimension);
 		this.field = field;
+		this.calculateCurves();
+	}
+	
+	public VectorField getField() {
+		return this.field;
 	}
 
 	public SimpleVector getNextCurveValue(SimpleVector current) {

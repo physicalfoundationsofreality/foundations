@@ -1,11 +1,11 @@
 package com.gruber.pfr.graphics.visualizations.phasespace;
 
-import com.gruber.pfr.graphics.elements.RealBasedVector;
+import com.gruber.pfr.graphics.visualizations.realbased.RealBasedVector;
 import com.gruber.pfr.space.numbers.real.RealNumber;
 import com.gruber.pfr.space.vectors.knspaces.KnVector.InvalidElementsException;
 import com.gruber.pfr.space.vectors.knspaces.phasespace.PhaseVector;
 
-public class CentralForceField extends ForceField {
+public class CentralForceField extends PhaseSpaceField {
 
 	float unitStrength;
 	float power;

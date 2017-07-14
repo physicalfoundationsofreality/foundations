@@ -20,20 +20,20 @@ public class PullbackOperation implements Operation {
 
 	public Set getFirstOperantDomain() {
 		
-		return map1.getDomain();
+		return map1.getDomainBasis();
 	}
 
 	public Set getSecondOperantDomain() {
 		
-		return map2.getDomain();
+		return map2.getDomainBasis();
 	}
 
 	public Set operate(Set op1, Set op2) throws OperantException {
 
-		if(!map1.getDomain().isElement(op1))
+		if(!map1.getDomainBasis().isElement(op1))
 			throw new OperantException(op1);
 		
-		if(!map2.getDomain().isElement(op2))
+		if(!map2.getDomainBasis().isElement(op2))
 			throw new OperantException(op2);
 		
 		return map.getPreImage(this.op.operate(map1.getImage(op1), map2.getImage(op2)));
@@ -41,6 +41,6 @@ public class PullbackOperation implements Operation {
 
 	public Set getOperationRange() {
 
-		return map.getDomain();
+		return map.getDomainBasis();
 	}
 }

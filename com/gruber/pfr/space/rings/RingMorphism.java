@@ -46,11 +46,11 @@ public abstract class RingMorphism implements Map {
 		return true;
 	}
 	
-	public Set getDomain() {
+	public Set getDomainBasis() {
 		return domain;
 	}
 
-	public Set getRange() {
+	public Set getRangeBasis() {
 		return range;
 	}
 }

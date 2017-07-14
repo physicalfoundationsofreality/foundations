@@ -20,20 +20,20 @@ public class PushforwardOperation implements Operation {
 
 	public Set getFirstOperantDomain() {
 		
-		return map1.getRange();
+		return map1.getRangeBasis();
 	}
 
 	public Set getSecondOperantDomain() {
 		
-		return map2.getRange();
+		return map2.getRangeBasis();
 	}
 
 	public Set operate(Set op1, Set op2) throws OperantException {
 
-		if(!map1.getRange().isElement(op1))
+		if(!map1.getRangeBasis().isElement(op1))
 			throw new OperantException(op1);
 		
-		if(!map2.getRange().isElement(op2))
+		if(!map2.getRangeBasis().isElement(op2))
 			throw new OperantException(op2);
 		
 		return map.getImage(this.op.operate(map1.getImage(op1), map2.getImage(op2)));
@@ -41,6 +41,6 @@ public class PushforwardOperation implements Operation {
 
 	public Set getOperationRange() {
 
-		return map.getRange();
+		return map.getRangeBasis();
 	}
 }

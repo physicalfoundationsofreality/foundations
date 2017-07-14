@@ -1,7 +1,5 @@
 package com.gruber.pfr.space.vectors.linearmaps;
 
-import java.util.Arrays;
-
 import com.gruber.pfr.space.rings.Ring;
 import com.gruber.pfr.space.rings.RingElement;
 
@@ -309,7 +307,7 @@ public class FiniteMatrix implements Matrix {
 			for(int j = 0; j < multi.getColumnNumber(); j++) {
 				mult[i][j] = (RingElement)this.baseRing.getNullElement();
 				for(int k = 0; k < this.getColumnNumber(); k++)
-					mult[i][j].add(this.matrix[i][k].multiply(multi.getElement(k, j)));
+					mult[i][j] = mult[i][j].add(this.matrix[i][k].multiply(multi.getElement(k, j)));
 			}
 		return new FiniteMatrix(this.baseRing,mult);
 	}

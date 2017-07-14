@@ -4,30 +4,32 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.gruber.pfr.graphics.SimpleCurve;
 import com.gruber.pfr.graphics.Visualization2D;
 import com.gruber.pfr.graphics.elements.Coordinates;
 import com.gruber.pfr.graphics.elements.Coordinates2D;
-import com.gruber.pfr.graphics.elements.RealBasedVector;
-import com.gruber.pfr.graphics.elements.SimpleVector;
 
 public class RealBasedCurves2D implements Visualization2D {
 
-	RealBasedCurves curves;
+	RealBasedVisualization curves;
 
-	public RealBasedCurves2D(RealBasedCurves curves) {
+	public RealBasedCurves2D(RealBasedVisualization curves) {
 		this.curves = curves;
 	}
 
-	public List<List<SimpleVector>> getCurves() {
+	public List<SimpleCurve> getCurves() {
 
-		List<List<RealBasedVector>> realCurves = this.curves.getRealCurves();
-		List<List<SimpleVector>> curves = new ArrayList<List<SimpleVector>>();
+		List<RealBasedCurve> realCurves = this.curves.getCurves();
+		List<SimpleCurve> curves = new ArrayList<SimpleCurve>();
 
-		Iterator<List<RealBasedVector>> curvesIter = realCurves.iterator();
+		Iterator<RealBasedCurve> curvesIter = realCurves.iterator();
 		while (curvesIter.hasNext()) {
-			ArrayList<SimpleVector> curve = new ArrayList<SimpleVector>();
 
-			Iterator<RealBasedVector> curveIter = curvesIter.next().iterator();
+			RealBasedCurve realCurve = curvesIter.next();
+			SimpleCurve curve = new SimpleCurve(realCurve.getOriginColor(), realCurve.getDirectionColor(),
+					realCurve.getStartingPoint().asVector());
+
+			Iterator<RealBasedVector> curveIter = realCurve.getCurve().iterator();
 			while (curveIter.hasNext())
 				curve.add(curveIter.next().asVector());
 
@@ -38,7 +40,7 @@ public class RealBasedCurves2D implements Visualization2D {
 
 	public Coordinates2D getCoordinates() {
 
-		Coordinates coord = this.curves.coord;
+		Coordinates coord = this.curves.getCoordinates();
 		return new Coordinates2D(coord.getMin(0), coord.getMax(0), coord.getMin(1), coord.getMax(1));
 	}
 

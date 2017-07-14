@@ -4,9 +4,9 @@ import com.gruber.pfr.space.base.Set;
 
 public interface Map {
 
-	public Set getDomain();
+	public Set getDomainBasis();
 	
-	public Set getRange();
+	public Set getRangeBasis();
 	
 	public abstract Set getImage(Set orig);
 	
