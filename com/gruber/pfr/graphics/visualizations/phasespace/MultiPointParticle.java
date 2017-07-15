@@ -57,7 +57,7 @@ public class MultiPointParticle extends PhaseSpaceField {
 					RealNumber strength = new RealNumber(
 							new Double(this.unitStrength[i] * this.unitStrength[j] * Math.pow(length, power))
 									.floatValue() * sign * this.weights[i]);
-					accel[i] = new RealVector(dist.multiply(strength).getElements()).add(accel[i]).getNegative();
+					accel[i] = new RealVector(dist.multiply(strength).getElements()).getNegative().add(accel[i]);
 					
 					strength = new RealNumber(
 							new Double(this.unitStrength[i] * this.unitStrength[j] * Math.pow(length, power))

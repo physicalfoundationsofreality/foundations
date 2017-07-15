@@ -44,8 +44,8 @@ public class Main {
 		JFrame f = new JFrame("Graph Wizard");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		GraphWizard ap = new GraphWizard(phaseSpaceMultiparticle(), new Dimension(1000, 1000),
-				FunctionType.SINGLE_POINT_TANGENT);
+		GraphWizard ap = new GraphWizard(phaseSpaceMultiparticle(), new Dimension(1500, 1200),
+				FunctionType.SINGLE_POINT);
 
 		ap.init();
 		ap.start();
@@ -294,7 +294,7 @@ public class Main {
 			FiniteDimensionalLinearMap map2d = new FiniteDimensionalLinearMap(new PhaseSpace(3).getStandardBasis(),
 					RnSpace.getInstance(2).getStandardBasis(), matrix);
 			
-			RealBasedVisualization curves = new RealBasedCurvesMultiProjection(new PhaseSpaceCurvesApproximation(starts, 30, 100, configs.getDimension(),
+			RealBasedVisualization curves = new RealBasedCurvesMultiProjection(new PhaseSpaceCurvesApproximation(starts, 1000, 100, configs.getDimension(),
 					new MultiPointParticle(configs.getUnitStrengths(), configs.getWeights(),-2,1)), configs.getProjects(), map2d);
 			
 			return new RealBasedCurves2D(curves);
