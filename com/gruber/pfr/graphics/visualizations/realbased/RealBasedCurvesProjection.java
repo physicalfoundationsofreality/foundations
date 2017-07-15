@@ -104,4 +104,9 @@ public class RealBasedCurvesProjection implements RealBasedVisualization {
 		}
 		return curves;
 	}
+
+	public int getLength() {
+
+		return this.vis.getLength();
+	}
 }

@@ -45,13 +45,14 @@ public class Main {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		GraphWizard ap = new GraphWizard(phaseSpaceMultiparticle(), new Dimension(1500, 1200),
-				FunctionType.SINGLE_POINT);
+				FunctionType.SINGLE_POINT, true);
 
 		ap.init();
 		ap.start();
 		f.add("Center", ap);
 		f.pack();
 		f.setVisible(true);
+
 	}
 
 	public static Visualization2D testSetup() {
@@ -294,7 +295,7 @@ public class Main {
 			FiniteDimensionalLinearMap map2d = new FiniteDimensionalLinearMap(new PhaseSpace(3).getStandardBasis(),
 					RnSpace.getInstance(2).getStandardBasis(), matrix);
 			
-			RealBasedVisualization curves = new RealBasedCurvesMultiProjection(new PhaseSpaceCurvesApproximation(starts, 1000, 100, configs.getDimension(),
+			RealBasedVisualization curves = new RealBasedCurvesMultiProjection(new PhaseSpaceCurvesApproximation(starts, 300, 100, configs.getDimension(),
 					new MultiPointParticle(configs.getUnitStrengths(), configs.getWeights(),-2,1)), configs.getProjects(), map2d);
 			
 			return new RealBasedCurves2D(curves);

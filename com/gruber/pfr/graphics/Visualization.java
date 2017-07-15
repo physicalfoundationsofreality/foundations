@@ -7,4 +7,6 @@ public interface Visualization {
 	public Coordinates getCoordinates();
 	
 	public void setDisplayParameters(int granularity);
+	
+	public int getLength();
 }

@@ -28,5 +28,7 @@ public class SimpleCurves2D implements Visualization2D {
 	public void setDisplayParameters(int granularity) {
 		this.curves.setDisplayParameters(granularity);
 	}
-
+	public int getLength() {
+		return this.curves.getLength();
+	}
 }

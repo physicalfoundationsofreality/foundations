@@ -20,6 +20,11 @@ public abstract class Function implements Visualization2D {
 		this.coord = new Coordinates2D(minX, maxX, 0, 0);
 		this.gran = granularity;
 	}
+	
+	public int getLength() {
+		
+		return 1;
+	}
 
 	public abstract float getFunctionValue(float x);
 

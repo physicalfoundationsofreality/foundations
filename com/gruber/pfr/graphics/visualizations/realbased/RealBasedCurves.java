@@ -17,24 +17,27 @@ public abstract class RealBasedCurves implements RealBasedVisualization {
 		this.gran = granularity;
 		this.curves = curves;
 		this.length = length;
-		
-//		this.calculateCurves();
+
+		// this.calculateCurves();
 	}
 
 	public abstract RealBasedVector getNextCurveValue(RealBasedVector current);
-	
+
 	public void setCurves(List<RealBasedCurve> curves) {
 		this.curves = curves;
-//		this.calculateCurves();
+		// this.calculateCurves();
 	}
 
+	public int getLength() {
+		return this.length;
+	}
 
 	public List<RealBasedCurve> getCurves() {
 		return this.curves;
 	}
 
 	protected void calculateCurves() {
-		
+
 		if (gran == 0 || curves == null || curves.size() == 0)
 			return;
 		else {
@@ -57,7 +60,7 @@ public abstract class RealBasedCurves implements RealBasedVisualization {
 						coord.setMax(curves.get(i).getStartingPoint().getMaxInt()[j], j);
 				}
 
-//				curves.get(i).refreshCurve();
+				// curves.get(i).refreshCurve();
 
 				RealBasedVector current = curves.get(i).getStartingPoint();
 				curves.get(i).add(current);

@@ -12,4 +12,6 @@ public interface Visualization2D {
 	public Coordinates2D getCoordinates();
 	
 	public void setDisplayParameters(int granularity);
+	
+	public int getLength();
 }

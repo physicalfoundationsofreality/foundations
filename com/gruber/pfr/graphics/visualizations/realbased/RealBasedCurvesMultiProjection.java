@@ -141,4 +141,8 @@ public class RealBasedCurvesMultiProjection implements RealBasedVisualization {
 		}
 		return curves;
 	}
+	public int getLength() {
+
+		return this.vis.getLength();
+	}
 }

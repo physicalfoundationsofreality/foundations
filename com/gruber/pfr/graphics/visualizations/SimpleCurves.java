@@ -32,6 +32,10 @@ public abstract class SimpleCurves implements Visualization {
 	public List<SimpleCurve> getCurves() {
 		return this.curves;
 	}
+	
+	public int getLength() {
+		return this.length;
+	}
 
 	public abstract SimpleVector getNextCurveValue(SimpleVector current);
 

@@ -11,6 +11,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BoxLayout;
 import javax.swing.JApplet;
@@ -23,7 +25,9 @@ public class GraphWizard extends JApplet {
 
 	public static enum FunctionType {
 
-		SINGLE_POINT, SINGLE_POINT_TANGENT, LINE_STRAIGHT, LINE_STRAIGHT_TANGENT;// , LINE_QUADRATIC, LINE_CUBIC
+		SINGLE_POINT, SINGLE_POINT_TANGENT, LINE_STRAIGHT, LINE_STRAIGHT_TANGENT;// ,
+																					// LINE_QUADRATIC,
+																					// LINE_CUBIC
 	}
 
 	class GraphicsSettings {
@@ -31,6 +35,16 @@ public class GraphWizard extends JApplet {
 		Visualization2D vis;
 		Dimension dim;
 		FunctionType type;
+		int totalLength;
+		List<SimpleCurve> paths;
+
+		public List<SimpleCurve> getPaths() {
+			return paths;
+		}
+
+		public void setPaths(List<SimpleCurve> paths) {
+			this.paths = paths;
+		}
 
 		public void setVis(Visualization2D vis) {
 			this.vis = vis;
@@ -51,6 +65,15 @@ public class GraphWizard extends JApplet {
 		public void setType(FunctionType type) {
 			this.type = type;
 		}
+
+		public int getTotalLength() {
+			return totalLength;
+		}
+
+		public void setTotalLength(int totalLength) {
+			this.totalLength = totalLength;
+		}
+
 	}
 
 	class GraphPainter extends Component {
@@ -74,86 +97,50 @@ public class GraphWizard extends JApplet {
 			origComposite = g2.getComposite();
 
 			// draw the functions
-			Iterator<SimpleCurve> paths = this.settings.vis.getCurves().iterator();
+			Iterator<SimpleCurve> paths = this.settings.getPaths().iterator();
+
+			float[] sizeFact = drawCoordinates(g2);
+
+			Coordinates2D coord = this.settings.vis.getCoordinates();
+			int offX = coord.getMinX();
+			int offY = coord.getMaxY();
 
 			while (paths.hasNext()) {
 
 				SimpleCurve curve = paths.next();
-				Iterator<SimpleVector> points = curve.getVectors().iterator();
-				SimpleVector vec = points.next(); // the first point
+				// List<SimpleVector> points = curve.getVectors().iterator();
+				if (!curve.hasNext())
+					continue;
+
+				SimpleVector vec = curve.getNext(); // the first point
 
 				if (vec != null) {
 
 					GeneralPath path = new GeneralPath();
 
-					Coordinates2D coord = this.settings.vis.getCoordinates();
+					for (int count = 0; count < curve.getLength() / this.settings.getTotalLength(); count++) {
 
-					// transform the coordinates
-					int offX = coord.getMinX();
-					int offY = coord.getMaxY();
-					int sizeX = coord.getMaxX() - coord.getMinX();
-					int sizeY = coord.getMaxY() - coord.getMinY();
-					float expX = new Float(this.settings.dim.getWidth()).floatValue() / new Float(sizeX).floatValue();
-					float expY = new Float(this.settings.dim.getHeight()).floatValue() / new Float(sizeY).floatValue();
+						if (curve.hasNext()) {
+							vec = curve.getNext();
+							float posX = (vec.getOrigin().getCoordinates()[0] - offX) * sizeFact[0];
+							float posY = (offY - vec.getOrigin().getCoordinates()[1]) * sizeFact[1];
 
-					// draw the coordinate system
-					g2.setColor(Color.BLACK);
-					float cX;
-					float cY;
-					
-					if (coord.getMaxX() > 0 && coord.getMinX() < 0)
-						cX = - offX * expX;
-					else if (coord.getMaxX() < 0)
-						cX = 1;
-					else
-						cX = sizeX - 1;
-					
-					if (coord.getMaxY() > 0 && coord.getMinY() < 0)
-						cY = offY * expY;
-					else if (coord.getMaxY() < 0)
-						cY = sizeY;
-					else
-						cY = 0;
-					g2.draw(new Line2D.Float(cX, 0, cX, new Float(this.settings.dim.getHeight()).floatValue()));
-					g2.draw(new Line2D.Float(0,cY, new Float(this.settings.dim.getWidth()).floatValue(), cY));
-					
-					// the first point
-					float posX = (vec.getOrigin().getCoordinates()[0] - offX) * expX;
-					float posY = (offY - vec.getOrigin().getCoordinates()[1]) * expY;
-					path.moveTo(posX, posY);
-					g2.setColor(curve.getOriginColor());
-					g2.draw(new Ellipse2D.Float(posX - 1, posY - 1, 2, 2));
+							if (this.settings.type.equals(FunctionType.SINGLE_POINT)
+									|| this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT))
+								path.moveTo(posX, posY);
 
-					g2.setColor(curve.getDirectionColor());
-					if (vec.getDirection() != null
-							&& ( this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT)
-									|| this.settings.type.equals(FunctionType.LINE_STRAIGHT_TANGENT))) {
-						float vecX = posX + vec.getDirection().getCoordinates()[0] * expX;
-						float vecY = posY - vec.getDirection().getCoordinates()[1] * expY;
-						g2.draw(new Line2D.Float(posX, posY, vecX, vecY));
-					}
+							g2.setColor(curve.getOriginColor());
+							g2.draw(new Ellipse2D.Float(posX - 1, posY - 1, 2, 2));
+							path.lineTo(posX, posY);
 
-					while (points.hasNext()) {
-
-						vec = points.next();
-						posX = (vec.getOrigin().getCoordinates()[0] - offX) * expX;
-						posY = (offY - vec.getOrigin().getCoordinates()[1]) * expY;
-
-						if (this.settings.type.equals(FunctionType.SINGLE_POINT) || this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT))
-							path.moveTo(posX, posY);
-
-						g2.setColor(curve.getOriginColor());
-						g2.draw(new Ellipse2D.Float(posX - 1, posY - 1, 2, 2));
-//						g2.drawString(new Float(vec.getOrigin().getCoordinates()[0]).toString() + '-' + new Float(vec.getOrigin().getCoordinates()[1]).toString(), posX, posY);
-						path.lineTo(posX, posY);
-
-						if (vec.getDirection() != null
-								&& ( this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT)
-										|| this.settings.type.equals(FunctionType.LINE_STRAIGHT_TANGENT) )) {
-							float vecX = posX + vec.getDirection().getCoordinates()[0] * expX;
-							float vecY = posY - vec.getDirection().getCoordinates()[1] * expY;
-							g2.setColor(curve.getDirectionColor());
-							g2.draw(new Line2D.Float(posX, posY, vecX, vecY));
+							if (vec.getDirection() != null
+									&& (this.settings.type.equals(FunctionType.SINGLE_POINT_TANGENT)
+											|| this.settings.type.equals(FunctionType.LINE_STRAIGHT_TANGENT))) {
+								float vecX = posX + vec.getDirection().getCoordinates()[0] * sizeFact[0];
+								float vecY = posY - vec.getDirection().getCoordinates()[1] * sizeFact[1];
+								g2.setColor(curve.getDirectionColor());
+								g2.draw(new Line2D.Float(posX, posY, vecX, vecY));
+							}
 						}
 					}
 					g2.setColor(curve.getOriginColor());
@@ -166,13 +153,62 @@ public class GraphWizard extends JApplet {
 	}
 
 	GraphicsSettings settings;
+	int length;
 
-	public GraphWizard(Visualization2D vis, Dimension dim, FunctionType type) {
+	public GraphWizard(Visualization2D vis, Dimension dim, FunctionType type, boolean animate) {
+
 		super();
+
 		this.settings = new GraphicsSettings();
 		this.settings.setVis(vis);
 		this.settings.setDim(dim);
 		this.settings.setType(type);
+		this.settings.setPaths(vis.getCurves());
+
+		if (animate)
+			this.length = vis.getLength();
+		else
+			this.length = 1;
+		this.settings.setTotalLength(this.length);
+
+	}
+
+	protected float[] drawCoordinates(Graphics2D g2) {
+
+		Coordinates2D coord = this.settings.vis.getCoordinates();
+
+		// transform the coordinates
+		int offX = coord.getMinX();
+		int offY = coord.getMaxY();
+		int sizeX = coord.getMaxX() - coord.getMinX();
+		int sizeY = coord.getMaxY() - coord.getMinY();
+
+		float[] sizeFact = new float[2];
+		sizeFact[0] = new Float(this.settings.dim.getWidth()).floatValue() / new Float(sizeX).floatValue();
+		sizeFact[1] = new Float(this.settings.dim.getHeight()).floatValue() / new Float(sizeY).floatValue();
+
+		// draw the coordinate system
+		g2.setColor(Color.BLACK);
+		float cX;
+		float cY;
+
+		if (coord.getMaxX() > 0 && coord.getMinX() < 0)
+			cX = -offX * sizeFact[0];
+		else if (coord.getMaxX() < 0)
+			cX = 1;
+		else
+			cX = sizeX - 1;
+
+		if (coord.getMaxY() > 0 && coord.getMinY() < 0)
+			cY = offY * sizeFact[1];
+		else if (coord.getMaxY() < 0)
+			cY = sizeY;
+		else
+			cY = 0;
+		g2.draw(new Line2D.Float(cX, 0, cX, new Float(this.settings.dim.getHeight()).floatValue()));
+		g2.draw(new Line2D.Float(0, cY, new Float(this.settings.dim.getWidth()).floatValue(), cY));
+
+		return sizeFact;
 	}
 
 	GraphPainter graphP;
@@ -187,5 +223,19 @@ public class GraphWizard extends JApplet {
 
 		graphP = new GraphPainter(this.settings);
 		p.add("Center", graphP);
+	}
+
+	public void paint(Graphics g) {
+
+		while (length > 0) {
+			super.paint(g);
+			length--;
+			try {
+				TimeUnit.MILLISECONDS.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

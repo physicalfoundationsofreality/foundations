@@ -38,6 +38,10 @@ public class RealBasedCurves2D implements Visualization2D {
 		return curves;
 	}
 
+	public int getLength() {
+		return this.curves.getLength();
+	}
+	
 	public Coordinates2D getCoordinates() {
 
 		Coordinates coord = this.curves.getCoordinates();
