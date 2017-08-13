@@ -2,8 +2,6 @@ package com.gruber.pfr.space.vectors.linearmaps;
 
 import com.gruber.pfr.space.base.Set;
 import com.gruber.pfr.space.modules.Module;
-import com.gruber.pfr.space.vectors.Vector;
-import com.gruber.pfr.space.vectors.basis.VectorSpan;
 
 public class NullMap extends LinearMap {
 
@@ -17,7 +15,6 @@ public class NullMap extends LinearMap {
 
 	public Set getPreImage(Set image) {
 		try {
-			Vector vector = (Vector) image;
 			if(image.equals(this.range.getNullElement()))
 				return this.getDomainBasis();
 			
